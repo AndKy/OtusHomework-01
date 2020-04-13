@@ -3,6 +3,7 @@ package com.example.otushomework_01
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
@@ -33,6 +34,22 @@ class MainActivity : AppCompatActivity() {
             layout.setOnClickListener {
                 selectMovie(i)
             }
+        }
+
+        savedInstanceState?.let {
+            val selMovie = it.getInt(STATE_SELECTED_MOVIE, -1)
+
+            selectMovie(selMovie)
+            log("onCreate: _selectedMovie = %d".format(selMovie))
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.apply {
+            putInt(STATE_SELECTED_MOVIE, _selectedMovie)
+            log("onSaveInstanceState: _selectedMovie = %d".format(_selectedMovie))
         }
     }
 
@@ -65,5 +82,9 @@ class MainActivity : AppCompatActivity() {
         setSelectedCellBackground(number)
 
         log("select movie #%d".format(number))
+    }
+
+    companion object {
+        private const val STATE_SELECTED_MOVIE = "selected_movie"
     }
 }
