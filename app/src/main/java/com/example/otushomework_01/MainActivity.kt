@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun log(msg: String) {
         Log.d("msg", msg)
     }
@@ -52,6 +51,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
     }
+
     private fun displayDetailsButton(number: Int) {
         for ((i, id) in _buttons.withIndex()) {
             val btn = findViewById<Button>(id)
