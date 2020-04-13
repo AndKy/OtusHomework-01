@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">OtusHomework-01</string>
+    <string name="movie_1_title">ИЗГОЙ</string>
+    <string name="movie_1_desc">2000, США\nдрама, мелодрама\n2 ч 23 мин\nРежиссер: Роберт Земекис\nВ главных ролях: Том Хэнкс, Хелен Хант, Крис Нот</string>
+    <string name="movie_2_title">МАРСИАНИН</string>
+    <string name="movie_2_desc">2015, Великобритания, США\nфантастика, приключения\n2 ч 24 мин\nРежиссер: Ридли Скотт\nВ главных ролях: Мэтт Дэймон, Джессика Честейн, Чиветель Эджиофор</string>
+    <string name="movie_3_title">Я - ЛЕГЕНДА</string>
+    <string name="movie_3_desc">2007, США\nфантастика, триллер\n1 ч 36 мин\nРежиссер: Френсис Лоуренс\nВ главных ролях: Уилл Смит, Алиси Брага, Чарли Тахэн</string>
+    <string name="details_btn_caption">Детали</string>
 </resources>
