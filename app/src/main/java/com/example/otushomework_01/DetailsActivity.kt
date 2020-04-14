@@ -1,7 +1,9 @@
 package com.example.otushomework_01
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 
@@ -37,9 +39,23 @@ class DetailsActivity : AppCompatActivity() {
         val textViewTitle = findViewById<TextView>(R.id.textViewTitle)
         val textViewAbout = findViewById<TextView>(R.id.textViewAbout)
         val imageView = findViewById<ImageView>(R.id.imageView)
+        val btnInvite = findViewById<Button>(R.id.buttonInvite)
 
         textViewTitle.text = getString(_titles[_movie])
         textViewAbout.text = getString(_aboutTexts[_movie])
         imageView.setImageResource(_images[_movie])
+
+        btnInvite.setOnClickListener {
+            val inviteMsg = getString(R.string.invite_msg).format(textViewTitle.text)
+            val sendIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, inviteMsg)
+            }
+
+            sendIntent.resolveActivity(packageManager)?.let {
+                startActivity(sendIntent)
+            }
+        }
     }
 }
