@@ -44,5 +44,30 @@
             android:layout_height="wrap_content"
             android:text="@string/invite_btn_caption" />
 
+        <TextView
+            android:id="@+id/textViewCommentLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:text="@string/comment_label" />
+
+        <EditText
+            android:id="@+id/editTextComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="@string/comment_hint"
+            android:inputType="textMultiLine" />
+
+        <CheckBox
+            android:id="@+id/checkBoxLike"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/checkbox_like" />
+
     </LinearLayout>
 </ScrollView>
