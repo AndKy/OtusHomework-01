@@ -1,5 +1,6 @@
 package com.example.otushomework_01
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -36,6 +37,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        for ((i, id) in _buttons.withIndex()) {
+            val btn = findViewById<Button>(id)
+            btn.setOnClickListener {
+                openDetailsWindow(i)
+            }
+        }
+
         savedInstanceState?.let {
             val selMovie = it.getInt(STATE_SELECTED_MOVIE, -1)
 
@@ -51,6 +59,15 @@ class MainActivity : AppCompatActivity() {
             putInt(STATE_SELECTED_MOVIE, _selectedMovie)
             log("onSaveInstanceState: _selectedMovie = %d".format(_selectedMovie))
         }
+    }
+
+    private fun openDetailsWindow(number: Int) {
+        val intent = Intent(this, DetailsActivity::class.java).apply {
+            putExtra(STATE_SELECTED_MOVIE, number)
+        }
+
+        log("openDetailsWindow: number = %d".format(number))
+        startActivity(intent)
     }
 
     private fun log(msg: String) {
@@ -85,6 +102,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val STATE_SELECTED_MOVIE = "selected_movie"
+        const val STATE_SELECTED_MOVIE = "selected_movie"
     }
 }
