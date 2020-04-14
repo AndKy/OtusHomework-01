@@ -3,9 +3,8 @@ package com.example.otushomework_01
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.util.Log
+import android.widget.*
 
 class DetailsActivity : AppCompatActivity() {
 
@@ -57,5 +56,40 @@ class DetailsActivity : AppCompatActivity() {
                 startActivity(sendIntent)
             }
         }
+
+        val checkBoxLike = findViewById<CheckBox>(R.id.checkBoxLike)
+        val editTextComment = findViewById<EditText>(R.id.editTextComment)
+
+        savedInstanceState?.let {
+            checkBoxLike.isChecked = it.getBoolean(STATE_LIKE, false)
+            editTextComment.text.append(it.getString(STATE_COMMENT, ""))
+
+            log("onCreate: like = %b comment_len=%d".format(checkBoxLike.isChecked, editTextComment.text.length))
+        }
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        val checkBoxLike = findViewById<CheckBox>(R.id.checkBoxLike)
+        val editTextComment = findViewById<EditText>(R.id.editTextComment)
+
+        outState.apply {
+            putBoolean(STATE_LIKE, checkBoxLike.isChecked)
+            putString(STATE_COMMENT, editTextComment.text.toString())
+
+            log("onSaveInstanceState: like = %b, comment_len=%d".format(checkBoxLike.isChecked, editTextComment.text.length))
+        }
+    }
+
+    private fun log(msg: String) {
+        Log.d("details:", msg)
+    }
+
+
+    companion object {
+        private const val STATE_LIKE = "like"
+        private const val STATE_COMMENT = "comment"
+    }
+
 }
