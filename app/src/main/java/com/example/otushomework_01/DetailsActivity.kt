@@ -1,5 +1,6 @@
 package com.example.otushomework_01
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -59,12 +60,25 @@ class DetailsActivity : AppCompatActivity() {
 
         val checkBoxLike = findViewById<CheckBox>(R.id.checkBoxLike)
         val editTextComment = findViewById<EditText>(R.id.editTextComment)
+        val btnReturnComment = findViewById<Button>(R.id.buttonReturnComment)
 
         savedInstanceState?.let {
             checkBoxLike.isChecked = it.getBoolean(STATE_LIKE, false)
             editTextComment.text.append(it.getString(STATE_COMMENT, ""))
 
             log("onCreate: like = %b comment_len=%d".format(checkBoxLike.isChecked, editTextComment.text.length))
+        }
+
+        btnReturnComment.setOnClickListener {
+            val intent = Intent().apply {
+                putExtra(STATE_LIKE, checkBoxLike.isChecked)
+                putExtra(STATE_COMMENT, editTextComment.text.toString())
+
+                log("onClick: like = %b, comment_len=%d".format(checkBoxLike.isChecked, editTextComment.text.length))
+            }
+
+            setResult(Activity.RESULT_OK, intent)
+            finish()
         }
     }
 
@@ -88,8 +102,8 @@ class DetailsActivity : AppCompatActivity() {
 
 
     companion object {
-        private const val STATE_LIKE = "like"
-        private const val STATE_COMMENT = "comment"
+        const val STATE_LIKE = "like"
+        const val STATE_COMMENT = "comment"
     }
 
 }

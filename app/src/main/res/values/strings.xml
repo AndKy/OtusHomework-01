@@ -12,7 +12,8 @@
     <string name="details_btn_caption">Детали</string>
     <string name="invite_btn_caption">Пригласить друзей</string>
     <string name="invite_msg">Не будет ли Вам угодно посетить сеанс фильма \'%s\' в моей компании?</string>
-    <string name="comment_label">Оставить комментарий</string>
+    <string name="comment_label">Отзыв</string>
+    <string name="comment_button">Оставить отзыв</string>
     <string name="comment_hint">Ведите комментарий</string>
     <string name="checkbox_like">Мне нравится</string>
 </resources>

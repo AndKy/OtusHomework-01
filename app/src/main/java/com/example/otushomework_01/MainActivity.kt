@@ -1,14 +1,13 @@
 package com.example.otushomework_01
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
-import androidx.core.view.isVisible
 
 class MainActivity : AppCompatActivity() {
 
@@ -61,17 +60,33 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == OUR_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                data?.let {
+                    val comment = it.getStringExtra(DetailsActivity.STATE_COMMENT)
+                    val like = it.getBooleanExtra(DetailsActivity.STATE_LIKE, false)
+
+                    log("onActivityResult: comment='%s'".format(comment))
+                    log("onActivityResult: like='%b'".format(like))
+                }
+            }
+        }
+    }
+
     private fun openDetailsWindow(number: Int) {
         val intent = Intent(this, DetailsActivity::class.java).apply {
             putExtra(STATE_SELECTED_MOVIE, number)
         }
 
         log("openDetailsWindow: number = %d".format(number))
-        startActivity(intent)
+        startActivityForResult(intent, OUR_REQUEST_CODE)
     }
 
     private fun log(msg: String) {
-        Log.d("msg", msg)
+        Log.d("main", msg)
     }
 
     private fun setSelectedCellBackground(number: Int) {
@@ -103,5 +118,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val STATE_SELECTED_MOVIE = "selected_movie"
+        const val OUR_REQUEST_CODE = 1
     }
 }
