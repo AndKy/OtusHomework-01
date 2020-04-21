@@ -3,4 +3,23 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
     </style>
 
+    <!-- Title text style -->
+    <style name="TextTitle">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/colorTitle</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Description text style -->
+    <style name="TextDesc">
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <!-- About text style -->
+    <style name="TextAbout">
+        <item name="android:textSize">20sp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:justificationMode">inter_word</item>
+    </style>
 </resources>

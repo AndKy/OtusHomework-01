@@ -35,16 +35,14 @@
                     android:id="@+id/textView1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="30sp"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
+                    style="@style/TextTitle"
                     android:text="@string/movie_1_title"/>
 
                 <TextView
                     android:id="@+id/multiAutoCompleteTextView1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    style="@style/TextDesc"
                     android:text="@string/movie_1_desc" />
             </LinearLayout>
         </LinearLayout>
@@ -75,16 +73,14 @@
                     android:id="@+id/textView2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="30sp"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
+                    style="@style/TextTitle"
                     android:text="@string/movie_2_title"/>
 
                 <TextView
                     android:id="@+id/multiAutoCompleteTextView2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    style="@style/TextDesc"
                     android:text="@string/movie_2_desc" />
             </LinearLayout>
         </LinearLayout>
@@ -115,16 +111,14 @@
                     android:id="@+id/textView3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="30sp"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
+                    style="@style/TextTitle"
                     android:text="@string/movie_3_title"/>
 
                 <TextView
                     android:id="@+id/multiAutoCompleteTextView3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    style="@style/TextDesc"
                     android:text="@string/movie_3_desc" />
             </LinearLayout>
         </LinearLayout>
