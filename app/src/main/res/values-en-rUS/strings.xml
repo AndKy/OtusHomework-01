@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="invite_btn_caption">Invite friends</string>
+    <string name="comment_label">Feedback</string>
+    <string name="comment_button">Send feedback</string>
+    <string name="comment_hint">Enter comment</string>
+    <string name="checkbox_like">I like</string>
+    <string name="details_btn_caption">Details</string>
+</resources>
