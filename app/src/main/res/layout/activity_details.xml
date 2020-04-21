@@ -40,7 +40,8 @@
             android:id="@+id/buttonInvite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/invite_btn_caption" />
+            android:text="@string/invite_btn_caption"
+            android:drawableStart="@drawable/ic_person_add_black_24dp"/>
 
         <TextView
             android:id="@+id/textViewCommentLabel"
