@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    tools:layout_editor_absoluteX="1dp"
+    tools:layout_editor_absoluteY="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="0.5">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/cell1">
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="100dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="12dp"
+                    app:srcCompat="@drawable/movie_1_little" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/TextTitle"
+                        android:text="@string/movie_1_title"/>
+
+                    <TextView
+                        android:id="@+id/multiAutoCompleteTextView1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/TextDesc"
+                        android:text="@string/movie_1_desc" />
+                </LinearLayout>
+            </LinearLayout>
+            <Button
+                android:id="@+id/buttonDetails1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/details_btn_caption"
+                android:visibility="gone" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/cell2">
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="100dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="12dp"
+                    app:srcCompat="@drawable/movie_2_little" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/TextTitle"
+                        android:text="@string/movie_2_title"/>
+
+                    <TextView
+                        android:id="@+id/multiAutoCompleteTextView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/TextDesc"
+                        android:text="@string/movie_2_desc" />
+                </LinearLayout>
+            </LinearLayout>
+            <Button
+                android:id="@+id/buttonDetails2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/details_btn_caption"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="0.5">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/cell3">
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="100dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="12dp"
+                    app:srcCompat="@drawable/movie_3_little" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/TextTitle"
+                        android:text="@string/movie_3_title"/>
+
+                    <TextView
+                        android:id="@+id/multiAutoCompleteTextView3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/TextDesc"
+                        android:text="@string/movie_3_desc" />
+                </LinearLayout>
+            </LinearLayout>
+            <Button
+                android:id="@+id/buttonDetails3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/details_btn_caption"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>
