@@ -2,12 +2,15 @@ package com.example.otushomework_01
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.widget.Button
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -94,10 +97,20 @@ class MainActivity : AppCompatActivity() {
             val layout = findViewById<LinearLayout>(id)
             layout.setBackgroundColor(
                 if (i == number)
-                    Color.parseColor("#d0d0ff")
+                    ContextCompat.getColor(layout.context, R.color.colorSelection)
                 else
-                    Color.WHITE
+                    getBackgroundColor()
             )
+        }
+    }
+
+    private fun getBackgroundColor() : Int {
+        val a = TypedValue()
+        theme.resolveAttribute(android.R.attr.windowBackground, a, true)
+        if (a.type >= TypedValue.TYPE_FIRST_COLOR_INT && a.type <= TypedValue.TYPE_LAST_COLOR_INT) { // windowBackground is a color
+            return a.data
+        } else { // windowBackground is not a color, probably a drawable
+            throw Exception("Background type is drawable, but expected color")
         }
     }
 
