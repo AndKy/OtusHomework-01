@@ -16,6 +16,9 @@
     <string name="comment_button">Оставить отзыв</string>
     <string name="comment_hint">Ведите комментарий</string>
     <string name="checkbox_like">Мне нравится</string>
+    <string name="yes_button">Да</string>
+    <string name="no_button">Нет</string>
+    <string name="confirm_buton">Вы действительно хотите выйти?</string>
 </resources>
 
 

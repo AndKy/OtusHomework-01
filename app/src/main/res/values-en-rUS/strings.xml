@@ -6,4 +6,7 @@
     <string name="comment_hint">Enter comment</string>
     <string name="checkbox_like">I like</string>
     <string name="details_btn_caption">Details</string>
+    <string name="yes_button">Yes</string>
+    <string name="no_button">No</string>
+    <string name="confirm_buton">" Are you sure you want to exit?"</string>
 </resources>

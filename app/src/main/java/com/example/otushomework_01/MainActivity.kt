@@ -1,10 +1,12 @@
 package com.example.otushomework_01
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.method.CharacterPickerDialog
 import android.util.Log
 import android.util.TypedValue
 import android.widget.Button
@@ -86,6 +88,30 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onBackPressed() {
+
+        val dialog : Dialog = object : Dialog(this) {
+
+            override fun onCreate(savedInstanceState: Bundle?) {
+                super.onCreate(savedInstanceState)
+                setContentView(R.layout.dialog_close)
+
+                val btnYes = findViewById<Button>(R.id.buttonYes)
+                val btnNo = findViewById<Button>(R.id.buttonNo)
+
+                btnYes.setOnClickListener() {
+                    finish()
+                }
+
+                btnNo.setOnClickListener() {
+                    super.onBackPressed()
+                }
+
+            }
+        }
+        dialog.show()
     }
 
     private fun openDetailsWindow(number: Int) {
