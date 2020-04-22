@@ -18,8 +18,6 @@
     <!-- About text style -->
     <style name="TextAbout">
         <item name="android:textSize">20sp</item>
-        <item name="android:paddingStart">16dp</item>
-        <item name="android:paddingEnd">16dp</item>
         <item name="android:justificationMode">inter_word</item>
     </style>
 </resources>
