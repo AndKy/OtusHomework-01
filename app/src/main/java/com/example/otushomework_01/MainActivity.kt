@@ -2,13 +2,16 @@ package com.example.otushomework_01
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 
 
@@ -44,6 +47,12 @@ class MainActivity : AppCompatActivity() {
             btn.setOnClickListener {
                 openDetailsWindow(i)
             }
+        }
+
+        // Day-night scheme button
+        val btn = findViewById<ImageButton>(R.id.buttonDayNight)
+        btn.setOnClickListener {
+            setNightMode(!isNightMode())
         }
 
         savedInstanceState?.let {
@@ -127,6 +136,21 @@ class MainActivity : AppCompatActivity() {
         setSelectedCellBackground(number)
 
         log("select movie #%d".format(number))
+    }
+
+    private fun setNightMode(enable: Boolean) {
+        val mode =
+            if (enable)
+                AppCompatDelegate.MODE_NIGHT_YES
+            else
+                AppCompatDelegate.MODE_NIGHT_NO
+
+        AppCompatDelegate.setDefaultNightMode(mode)
+    }
+
+    private fun isNightMode() : Boolean {
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return currentNightMode == Configuration.UI_MODE_NIGHT_YES
     }
 
     companion object {
