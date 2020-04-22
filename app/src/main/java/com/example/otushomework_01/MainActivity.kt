@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 btnNo.setOnClickListener() {
-                    super.onBackPressed()
+                    dismiss()
                 }
 
             }
