@@ -1,13 +1,21 @@
 package com.example.otushomework_01
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
+import android.content.res.Configuration
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.method.CharacterPickerDialog
 import android.util.Log
+import android.util.TypedValue
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,6 +51,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Day-night scheme button
+        val btn = findViewById<ImageButton>(R.id.buttonDayNight)
+        btn.setOnClickListener {
+            setNightMode(!isNightMode())
+        }
+
         savedInstanceState?.let {
             val selMovie = it.getInt(STATE_SELECTED_MOVIE, -1)
 
@@ -76,6 +90,30 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+
+        val dialog : Dialog = object : Dialog(this) {
+
+            override fun onCreate(savedInstanceState: Bundle?) {
+                super.onCreate(savedInstanceState)
+                setContentView(R.layout.dialog_close)
+
+                val btnYes = findViewById<Button>(R.id.buttonYes)
+                val btnNo = findViewById<Button>(R.id.buttonNo)
+
+                btnYes.setOnClickListener() {
+                    finish()
+                }
+
+                btnNo.setOnClickListener() {
+                    dismiss()
+                }
+
+            }
+        }
+        dialog.show()
+    }
+
     private fun openDetailsWindow(number: Int) {
         val intent = Intent(this, DetailsActivity::class.java).apply {
             putExtra(STATE_SELECTED_MOVIE, number)
@@ -94,10 +132,20 @@ class MainActivity : AppCompatActivity() {
             val layout = findViewById<LinearLayout>(id)
             layout.setBackgroundColor(
                 if (i == number)
-                    Color.parseColor("#d0d0ff")
+                    ContextCompat.getColor(layout.context, R.color.colorSelection)
                 else
-                    Color.WHITE
+                    getBackgroundColor()
             )
+        }
+    }
+
+    private fun getBackgroundColor() : Int {
+        val a = TypedValue()
+        theme.resolveAttribute(android.R.attr.windowBackground, a, true)
+        if (a.type >= TypedValue.TYPE_FIRST_COLOR_INT && a.type <= TypedValue.TYPE_LAST_COLOR_INT) { // windowBackground is a color
+            return a.data
+        } else { // windowBackground is not a color, probably a drawable
+            throw Exception("Background type is drawable, but expected color")
         }
     }
 
@@ -114,6 +162,21 @@ class MainActivity : AppCompatActivity() {
         setSelectedCellBackground(number)
 
         log("select movie #%d".format(number))
+    }
+
+    private fun setNightMode(enable: Boolean) {
+        val mode =
+            if (enable)
+                AppCompatDelegate.MODE_NIGHT_YES
+            else
+                AppCompatDelegate.MODE_NIGHT_NO
+
+        AppCompatDelegate.setDefaultNightMode(mode)
+    }
+
+    private fun isNightMode() : Boolean {
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return currentNightMode == Configuration.UI_MODE_NIGHT_YES
     }
 
     companion object {
