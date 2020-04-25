@@ -9,8 +9,7 @@
 
     <ImageView
         android:id="@+id/imageLogo"
-        android:layout_width="120dp"
-        android:layout_height="180dp"
+        style="@style/LogoImage"
         android:layout_margin="12dp"
         tools:src="@tools:sample/avatars" />
 
@@ -33,6 +32,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Description" />
+
+        <Button
+            android:id="@+id/buttonDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/details_btn_caption" />
 
     </LinearLayout>
 </LinearLayout>

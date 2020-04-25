@@ -9,58 +9,49 @@ import android.os.Bundle
 import android.text.method.CharacterPickerDialog
 import android.util.Log
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
 
-    private var _selectedMovie: Int = -1
-    private var _buttons =
-        intArrayOf(
-            R.id.buttonDetails1,
-            R.id.buttonDetails2,
-            R.id.buttonDetails3
-        )
-    private var _cells =
-        intArrayOf(
-            R.id.cell1,
-            R.id.cell2,
-            R.id.cell3
-        )
+    private val _movies = mutableListOf(
+        MovieItem(R.drawable.movie_1_little, R.drawable.movie_1_big, R.string.movie_1_title, R.string.movie_1_desc, R.string.movie_1_about),
+        MovieItem(R.drawable.movie_2_little, R.drawable.movie_2_big, R.string.movie_2_title, R.string.movie_2_desc, R.string.movie_2_about),
+        MovieItem(R.drawable.movie_3_little, R.drawable.movie_3_big, R.string.movie_3_title, R.string.movie_3_desc, R.string.movie_3_about),
+        MovieItem(R.drawable.movie_1_little, R.drawable.movie_1_big, R.string.movie_1_title, R.string.movie_1_desc, R.string.movie_1_about),
+        MovieItem(R.drawable.movie_2_little, R.drawable.movie_2_big, R.string.movie_2_title, R.string.movie_2_desc, R.string.movie_2_about),
+        MovieItem(R.drawable.movie_3_little, R.drawable.movie_3_big, R.string.movie_3_title, R.string.movie_3_desc, R.string.movie_3_about),
+        MovieItem(R.drawable.movie_1_little, R.drawable.movie_1_big, R.string.movie_1_title, R.string.movie_1_desc, R.string.movie_1_about),
+        MovieItem(R.drawable.movie_2_little, R.drawable.movie_2_big, R.string.movie_2_title, R.string.movie_2_desc, R.string.movie_2_about),
+        MovieItem(R.drawable.movie_3_little, R.drawable.movie_3_big, R.string.movie_3_title, R.string.movie_3_desc, R.string.movie_3_about),
+        MovieItem(R.drawable.movie_1_little, R.drawable.movie_1_big, R.string.movie_1_title, R.string.movie_1_desc, R.string.movie_1_about),
+        MovieItem(R.drawable.movie_2_little, R.drawable.movie_2_big, R.string.movie_2_title, R.string.movie_2_desc, R.string.movie_2_about),
+        MovieItem(R.drawable.movie_3_little, R.drawable.movie_3_big, R.string.movie_3_title, R.string.movie_3_desc, R.string.movie_3_about)
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        for ((i, id) in _cells.withIndex()) {
-            val layout = findViewById<LinearLayout>(id)
-            layout.setOnClickListener {
-                selectMovie(i)
-            }
-        }
-
-        for ((i, id) in _buttons.withIndex()) {
-            val btn = findViewById<Button>(id)
-            btn.setOnClickListener {
-                openDetailsWindow(i)
-            }
-        }
-
-        // Day-night scheme button
-        val btn = findViewById<ImageButton>(R.id.buttonDayNight)
-        btn.setOnClickListener {
-            setNightMode(!isNightMode())
-        }
+        initRecycler()
+        initClickListeners()
 
         savedInstanceState?.let {
             val selMovie = it.getInt(STATE_SELECTED_MOVIE, -1)
+            val movieAdapter = recyclerMovies.adapter as MoviesAdapter
 
-            selectMovie(selMovie)
+            movieAdapter.selectedMovie = selMovie
             log("onCreate: _selectedMovie = %d".format(selMovie))
         }
     }
@@ -69,8 +60,11 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
 
         outState.apply {
-            putInt(STATE_SELECTED_MOVIE, _selectedMovie)
-            log("onSaveInstanceState: _selectedMovie = %d".format(_selectedMovie))
+
+            val movieAdapter = recyclerMovies.adapter as MoviesAdapter
+
+            putInt(STATE_SELECTED_MOVIE, movieAdapter.selectedMovie)
+            log("onSaveInstanceState: _selectedMovie = %d".format(movieAdapter.selectedMovie))
         }
     }
 
@@ -108,35 +102,63 @@ class MainActivity : AppCompatActivity() {
                 btnNo.setOnClickListener() {
                     dismiss()
                 }
-
             }
         }
         dialog.show()
     }
 
-    private fun openDetailsWindow(number: Int) {
-        val intent = Intent(this, DetailsActivity::class.java).apply {
-            putExtra(STATE_SELECTED_MOVIE, number)
+    private fun initClickListeners() {
+
+        // Day-night scheme button
+        val btn = findViewById<ImageButton>(R.id.buttonDayNight)
+        btn.setOnClickListener {
+            setNightMode(!isNightMode())
         }
 
-        log("openDetailsWindow: number = %d".format(number))
+        val moviesAdapter = recyclerMovies.adapter as MoviesAdapter
+        moviesAdapter.setMovieClickListener { movieItem: MovieItem, i: Int ->
+            log("MovieClickListener clicked at position $i")
+
+            val pos = _movies.indexOfFirst { it ===  movieItem }
+            moviesAdapter.selectedMovie = pos
+        }
+
+        moviesAdapter.setDetailsClickListener { movieItem: MovieItem, i: Int ->
+            log("DetailsClickListener clicked at position $i")
+            openDetailsWindow(movieItem)
+        }
+    }
+
+    private fun initRecycler() {
+        val recycler = findViewById<RecyclerView>(R.id.recyclerMovies)
+        val twoColumns = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+        // portrait single column layout, landscape - two columns
+        val layoutManager: RecyclerView.LayoutManager =
+            if (twoColumns)
+                GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
+            else
+                LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
+        val moviesAdapter = MoviesAdapter(LayoutInflater.from(this), _movies)
+
+        moviesAdapter.colorSelected = ContextCompat.getColor(this, R.color.colorSelection)
+        moviesAdapter.colorBackground = getBackgroundColor()
+
+        recycler.layoutManager = layoutManager
+        recycler.adapter = moviesAdapter
+    }
+
+    private fun openDetailsWindow(movieItem: MovieItem) {
+        val intent = Intent(this, DetailsActivity::class.java).apply {
+            putExtra(STATE_SELECTED_MOVIE, movieItem)
+        }
+
         startActivityForResult(intent, OUR_REQUEST_CODE)
     }
 
     private fun log(msg: String) {
         Log.d("main", msg)
-    }
-
-    private fun setSelectedCellBackground(number: Int) {
-        for ((i, id) in _cells.withIndex()) {
-            val layout = findViewById<LinearLayout>(id)
-            layout.setBackgroundColor(
-                if (i == number)
-                    ContextCompat.getColor(layout.context, R.color.colorSelection)
-                else
-                    getBackgroundColor()
-            )
-        }
     }
 
     private fun getBackgroundColor() : Int {
@@ -147,21 +169,6 @@ class MainActivity : AppCompatActivity() {
         } else { // windowBackground is not a color, probably a drawable
             throw Exception("Background type is drawable, but expected color")
         }
-    }
-
-    private fun displayDetailsButton(number: Int) {
-        for ((i, id) in _buttons.withIndex()) {
-            val btn = findViewById<Button>(id)
-            btn.visibility = if (i == number) Button.VISIBLE else Button.GONE
-        }
-    }
-
-    private fun selectMovie(number: Int) {
-        _selectedMovie = number
-        displayDetailsButton(number)
-        setSelectedCellBackground(number)
-
-        log("select movie #%d".format(number))
     }
 
     private fun setNightMode(enable: Boolean) {

@@ -9,143 +9,16 @@
     tools:layout_editor_absoluteX="1dp"
     tools:layout_editor_absoluteY="1dp">
 
-    <ScrollView
-        android:id="@+id/scrollView2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/cell1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="120dp"
-                    android:layout_height="180dp"
-                    android:layout_margin="12dp"
-                    app:srcCompat="@drawable/movie_1_little" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="12dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textView1"
-                        style="@style/TextTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/movie_1_title" />
-
-                    <TextView
-                        android:id="@+id/multiAutoCompleteTextView1"
-                        style="@style/TextDesc"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/movie_1_desc" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/buttonDetails1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/details_btn_caption"
-                android:visibility="gone" />
-
-            <LinearLayout
-                android:id="@+id/cell2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="120dp"
-                    android:layout_height="180dp"
-                    android:layout_margin="12dp"
-                    app:srcCompat="@drawable/movie_2_little" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="12dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textView2"
-                        style="@style/TextTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/movie_2_title" />
-
-                    <TextView
-                        android:id="@+id/multiAutoCompleteTextView2"
-                        style="@style/TextDesc"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/movie_2_desc" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/buttonDetails2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/details_btn_caption"
-                android:visibility="gone" />
-
-            <LinearLayout
-                android:id="@+id/cell3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imageView3"
-                    android:layout_width="120dp"
-                    android:layout_height="180dp"
-                    android:layout_margin="12dp"
-                    app:srcCompat="@drawable/movie_3_little" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="12dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textView3"
-                        style="@style/TextTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/movie_3_title" />
-
-                    <TextView
-                        android:id="@+id/multiAutoCompleteTextView3"
-                        style="@style/TextDesc"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/movie_3_desc" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/buttonDetails3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/details_btn_caption"
-                android:visibility="gone" />
-        </LinearLayout>
-    </ScrollView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerMovies"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:itemCount="4"
+        tools:listitem="@layout/item_movie"/>
 
     <ImageButton
         android:id="@+id/buttonDayNight"
