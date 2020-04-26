@@ -19,6 +19,8 @@
     <string name="yes_button">Да</string>
     <string name="no_button">Нет</string>
     <string name="confirm_button">Вы действительно хотите выйти?</string>
+    <string name="movies">Фильмы</string>
+    <string name="favorites">Избранное</string>
 </resources>
 
 

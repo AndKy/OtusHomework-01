@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
+import com.example.otushomework_01.MovieListFragment.Companion.STATE_SELECTED_MOVIE
 
 class DetailsActivity : AppCompatActivity() {
 
@@ -13,7 +14,7 @@ class DetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
 
-        val movie = intent.getParcelableExtra<MovieItem>(MainActivity.STATE_SELECTED_MOVIE)
+        val movie = intent.getParcelableExtra<MovieItem>(STATE_SELECTED_MOVIE)
 
         val textViewTitle = findViewById<TextView>(R.id.textViewTitle)
         val textViewAbout = findViewById<TextView>(R.id.textViewAbout)
