@@ -8,10 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.recyclerview.widget.*
 import kotlinx.android.synthetic.main.fragment_movie_list.*
 
 class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
@@ -78,25 +75,34 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
         recyclerMovies.layoutManager = layoutManager
         recyclerMovies.adapter = moviesAdapter
         recyclerMovies.scrollToPosition(0)
+
+        val swipeHandler = object : MoviesSwipeToDelete(context) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                 moviesAdapter.removeAt(viewHolder.adapterPosition)
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(swipeHandler)
+        itemTouchHelper.attachToRecyclerView(recyclerMovies)
     }
 
     private fun initClickListeners() {
 
         val moviesAdapter = recyclerMovies.adapter as MoviesAdapter
-        moviesAdapter.setMovieClickListener { movieItem: MovieItem, i: Int ->
-            log("MovieClickListener clicked at position $i")
+        moviesAdapter.setMovieClickListener { movieItem: MovieItem ->
+            log("MovieClickListener clicked")
 
             val pos = movies.indexOfFirst { it ===  movieItem }
             moviesAdapter.selectedMovie = pos
         }
 
-        moviesAdapter.setDetailsClickListener { movieItem: MovieItem, i: Int ->
-            log("DetailsClickListener clicked at position $i")
+        moviesAdapter.setDetailsClickListener { movieItem: MovieItem ->
+            log("DetailsClickListener clicked")
             openDetailsWindow(movieItem)
         }
 
-        moviesAdapter.setAddMovieClickListener { i: Int ->
-            log("AddMovieClickListener clicked at position $i")
+        moviesAdapter.setAddMovieClickListener {
+            log("AddMovieClickListener clicked")
 
             movies.add(Hollywood.makeNewMovie(movies))
             moviesAdapter.notifyItemInserted(movies.size - 1)

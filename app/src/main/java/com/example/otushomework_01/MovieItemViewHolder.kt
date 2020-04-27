@@ -6,7 +6,12 @@ import kotlinx.android.synthetic.main.item_movie.view.*
 
 class MovieItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+    var movie: MovieItem? = null
+        private set
+
     fun bind(item: MovieItem) {
+        movie = item
+
         // Implicit findViewById<>
         itemView.imageLogo.setImageResource(item.idImgLogo)
         itemView.textViewDescription.text = item.textDescription

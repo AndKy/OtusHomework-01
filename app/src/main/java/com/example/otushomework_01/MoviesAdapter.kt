@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_button.view.*
 import kotlinx.android.synthetic.main.item_movie.view.*
 
-typealias ClickHandler = (movieItem: MovieItem, position: Int) -> Unit
-typealias AddMovieClickHandler = (position: Int) -> Unit
+typealias ClickHandler = (movieItem: MovieItem) -> Unit
+typealias LongClickHandler = (movieItem: MovieItem) -> Boolean
+typealias AddMovieClickHandler = () -> Unit
 
 class MoviesAdapter(
     private val inflater: LayoutInflater,
-    private val items: List<MovieItem>
+    private val items: MutableList<MovieItem>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -26,13 +27,12 @@ class MoviesAdapter(
     private var movieClickListener: ClickHandler? = null
     private var detailsClickListener: ClickHandler? = null
     private var addMovieClickListener: AddMovieClickHandler? = null
+    private var movieLongClickListener: LongClickHandler? = null
 
     var selectedMovie = -1
         set(value) {
-            if (value in items.indices)  {
-                selectMovie(value)
-                field = value
-            }
+            selectMovie(value)
+            field = value
         }
 
     private var colorSelected = Color.TRANSPARENT
@@ -64,18 +64,30 @@ class MoviesAdapter(
             val i = itemPositionToIndex(position)
 
             if (i in items.indices) {
-                holder.bind(items[i])
-                holder.itemView.setOnClickListener { movieClickListener?.invoke(items[i], position) }
-                holder.itemView.buttonDetails.setOnClickListener { detailsClickListener?.invoke(items[i], position) }
+                val movie = items[i]
+                holder.bind(movie)
+                holder.itemView.setOnClickListener { movieClickListener?.invoke(movie) }
+                holder.itemView.buttonDetails.setOnClickListener { detailsClickListener?.invoke(movie) }
+                holder.itemView.setOnLongClickListener {  movieLongClickListener?.invoke(movie) ?: false }
             }
         }
         else if (holder is ButtonsItemViewHolder) {
-            holder.itemView.buttonAdd.setOnClickListener { addMovieClickListener?.invoke(position) }
+            holder.itemView.buttonAdd.setOnClickListener { addMovieClickListener?.invoke() }
         }
     }
 
     override fun getItemViewType(position: Int) : Int {
         return if (position < items.size) VIEW_TYPE_MOVIE else VIEW_TYPE_BUTTON
+    }
+
+    fun removeAt(position: Int) {
+        selectedMovie = -1
+
+        val i = itemPositionToIndex(position)
+        if (i in items.indices) {
+            items.removeAt(i)
+            notifyItemRemoved(position)
+        }
     }
 
     fun setMovieClickListener(listener: ClickHandler) {
@@ -90,12 +102,27 @@ class MoviesAdapter(
         addMovieClickListener = listener
     }
 
+    fun setMovieLongClickListener(listener: LongClickHandler) {
+        movieLongClickListener = listener
+    }
+
+    fun getItemPosition(item: MovieItem): Int {
+        val pos = items.indexOfFirst { it ===  item }
+        return itemIndexToPosition(pos)
+    }
+
+    fun getButtonPosition(): Int {
+        return itemIndexToPosition(items.size)
+    }
+
     private fun selectMovie(i: Int) {
          if (i != selectedMovie) {
             unselectMovie()
-            items[i].colorBackground = colorSelected
-            items[i].showDetailsButton = items[i].textAbout.isNotEmpty()
-            notifyItemChanged(i)
+             if (i in items.indices) {
+                 items[i].colorBackground = colorSelected
+                 items[i].showDetailsButton = items[i].textAbout.isNotEmpty()
+                 notifyItemChanged(i)
+             }
         }
     }
 
