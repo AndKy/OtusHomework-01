@@ -21,6 +21,7 @@
     <string name="confirm_button">Вы действительно хотите выйти?</string>
     <string name="movies">Фильмы</string>
     <string name="favorites">Избранное</string>
+    <string name="add_movie">Добавить фильм</string>
 </resources>
 
 

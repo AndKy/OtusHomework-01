@@ -77,18 +77,14 @@ class MainActivity : AppCompatActivity() {
             arrayListOf(
                 MovieItem(R.drawable.movie_1_little, R.drawable.movie_1_big, getString(R.string.movie_1_title), getString(R.string.movie_1_desc), getString(R.string.movie_1_about)),
                 MovieItem(R.drawable.movie_2_little, R.drawable.movie_2_big, getString(R.string.movie_2_title), getString(R.string.movie_2_desc), getString(R.string.movie_2_about)),
-                MovieItem(R.drawable.movie_3_little, R.drawable.movie_3_big, getString(R.string.movie_3_title), getString(R.string.movie_3_desc), getString(R.string.movie_3_about)),
-                Hollywood.makeMovie(),
-                Hollywood.makeMovie(),
-                Hollywood.makeMovie(),
-                Hollywood.makeMovie(),
-                Hollywood.makeMovie(),
-                Hollywood.makeMovie(),
-                Hollywood.makeMovie(),
-                Hollywood.makeMovie(),
-                Hollywood.makeMovie()
+                MovieItem(R.drawable.movie_3_little, R.drawable.movie_3_big, getString(R.string.movie_3_title), getString(R.string.movie_3_desc), getString(R.string.movie_3_about))
             )
         )
+
+        // Add number of random movies
+        repeat(9) {
+            movies.add(Hollywood.makeNewMovie(movies))
+        }
     }
 
     private fun log(msg: String) {

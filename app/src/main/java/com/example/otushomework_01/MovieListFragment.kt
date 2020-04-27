@@ -11,16 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import kotlinx.android.synthetic.main.fragment_movie_list.*
 
 class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
 
-    private var movies: List<MovieItem>? = null
+    private var movies = ArrayList<MovieItem>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        movies = arguments?.getParcelableArrayList<MovieItem>(ARG_MOVIES)
+        movies = arguments?.getParcelableArrayList<MovieItem>(ARG_MOVIES)!!
 
         initRecycler()
         initClickListeners()
@@ -67,14 +68,16 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
         // portrait single column layout, landscape - two columns
         val layoutManager: RecyclerView.LayoutManager =
             if (twoColumns)
+                //StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
                 GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
             else
-                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false).apply { stackFromEnd = true }
 
-        val moviesAdapter = MoviesAdapter(LayoutInflater.from(context), movies!!)
+        val moviesAdapter = MoviesAdapter(LayoutInflater.from(context), movies)
 
         recyclerMovies.layoutManager = layoutManager
         recyclerMovies.adapter = moviesAdapter
+        recyclerMovies.scrollToPosition(0)
     }
 
     private fun initClickListeners() {
@@ -83,13 +86,21 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
         moviesAdapter.setMovieClickListener { movieItem: MovieItem, i: Int ->
             log("MovieClickListener clicked at position $i")
 
-            val pos = movies!!.indexOfFirst { it ===  movieItem }
+            val pos = movies.indexOfFirst { it ===  movieItem }
             moviesAdapter.selectedMovie = pos
         }
 
         moviesAdapter.setDetailsClickListener { movieItem: MovieItem, i: Int ->
             log("DetailsClickListener clicked at position $i")
             openDetailsWindow(movieItem)
+        }
+
+        moviesAdapter.setAddMovieClickListener { i: Int ->
+            log("AddMovieClickListener clicked at position $i")
+
+            movies.add(Hollywood.makeNewMovie(movies))
+            moviesAdapter.notifyItemInserted(movies.size - 1)
+            recyclerMovies.smoothScrollToPosition(movies.size)
         }
     }
 

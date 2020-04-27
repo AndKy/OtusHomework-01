@@ -620,6 +620,20 @@ object Hollywood {
         return MovieItem(logos[i], logos[i], randTitle(i), details, details)
     }
 
+    fun makeNewMovie(movies: List<MovieItem>) : MovieItem {
+        var movie = makeMovie()
+
+        // try to generate unique movie fixed number of times
+        repeat (10) {
+            val isUnique = movies.find { it.textTitle == movie.textTitle } == null
+            if (isUnique)
+                return movie
+            movie = makeMovie()
+        }
+
+        return movie
+    }
+
     private fun randTitle(i: Int) : String {
         val title = titles[i]
 
@@ -642,7 +656,6 @@ object Hollywood {
     }
 
     private fun pickFrom(strings: Array<String>, n: Int) : String {
-
         if (n <= 0) {
             return ""
         }
@@ -651,7 +664,7 @@ object Hollywood {
 
             while (idx.size < n)
             {
-                var r = Random.nextInt(strings.size)
+                val r = Random.nextInt(strings.size)
                 if (!idx.contains(r))
                     idx.add(r)
             }

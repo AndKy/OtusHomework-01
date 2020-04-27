@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.item_button.view.*
 import kotlinx.android.synthetic.main.item_movie.view.*
 
 typealias ClickHandler = (movieItem: MovieItem, position: Int) -> Unit
+typealias AddMovieClickHandler = (position: Int) -> Unit
 
 class MoviesAdapter(
     private val inflater: LayoutInflater,
@@ -18,10 +20,12 @@ class MoviesAdapter(
 
     companion object {
         const val VIEW_TYPE_MOVIE = 0
+        const val VIEW_TYPE_BUTTON = 1
     }
 
     private var movieClickListener: ClickHandler? = null
     private var detailsClickListener: ClickHandler? = null
+    private var addMovieClickListener: AddMovieClickHandler? = null
 
     var selectedMovie = -1
         set(value) {
@@ -45,25 +49,34 @@ class MoviesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         log("onCreateViewHolder $viewType")
 
-        return MovieItemViewHolder(inflater.inflate(R.layout.item_movie, parent, false))
+        return if (viewType == VIEW_TYPE_MOVIE)
+            MovieItemViewHolder(inflater.inflate(R.layout.item_movie, parent, false))
+        else
+            ButtonsItemViewHolder(inflater.inflate(R.layout.item_button, parent, false))
     }
 
-    override fun getItemCount() = itemIndexToPosition(items.size)
+    override fun getItemCount() = items.size + 1 // +1 button
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         log("onBindViewHolder $position")
-        val i = itemPositionToIndex(position)
 
-        if (i in items.indices) {
-            if (holder is MovieItemViewHolder) {
+        if (holder is MovieItemViewHolder) {
+            val i = itemPositionToIndex(position)
+
+            if (i in items.indices) {
                 holder.bind(items[i])
                 holder.itemView.setOnClickListener { movieClickListener?.invoke(items[i], position) }
                 holder.itemView.buttonDetails.setOnClickListener { detailsClickListener?.invoke(items[i], position) }
             }
         }
+        else if (holder is ButtonsItemViewHolder) {
+            holder.itemView.buttonAdd.setOnClickListener { addMovieClickListener?.invoke(position) }
+        }
     }
 
-    override fun getItemViewType(position: Int) = VIEW_TYPE_MOVIE
+    override fun getItemViewType(position: Int) : Int {
+        return if (position < items.size) VIEW_TYPE_MOVIE else VIEW_TYPE_BUTTON
+    }
 
     fun setMovieClickListener(listener: ClickHandler) {
         movieClickListener = listener
@@ -71,6 +84,10 @@ class MoviesAdapter(
 
     fun setDetailsClickListener(listener: ClickHandler) {
         detailsClickListener = listener
+    }
+
+    fun setAddMovieClickListener(listener: AddMovieClickHandler) {
+        addMovieClickListener = listener
     }
 
     private fun selectMovie(i: Int) {

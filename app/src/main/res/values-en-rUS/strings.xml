@@ -11,4 +11,5 @@
     <string name="confirm_button">" Are you sure you want to exit?"</string>
     <string name="movies">Movies</string>
     <string name="favorites">Favorites</string>
+    <string name="add_movie">Add movie</string>
 </resources>
