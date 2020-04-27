@@ -7,9 +7,9 @@ import kotlinx.android.parcel.Parcelize
 data class MovieItem (
     val idImgLogo : Int,
     val idImgScreenshot : Int,
-    val idTextTitle : Int,
-    val idTextDescription : Int,
-    val idTextAbout : Int,
+    val textTitle : String,
+    val textDescription : String,
+    val textAbout : String,
     var colorBackground: Int = 0,
     var showDetailsButton: Boolean = false
 ) : Parcelable

@@ -5,13 +5,23 @@
 
     <!-- Title text style -->
     <style name="TextTitle">
-        <item name="android:textSize">30sp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/colorTitle</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Title text style -->
+    <style name="TextSubtitle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/colorSubtitle</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <!-- Description text style -->
     <style name="TextDesc">
+        <item name="android:layout_marginTop">5dp</item>
         <item name="android:textSize">15sp</item>
     </style>
 

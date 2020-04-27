@@ -2,4 +2,6 @@
 <resources>
     <color name="colorSelection">#606080</color>
     <color name="colorTitle">#ffffff</color>
+    <color name="colorSubtitle">#DFDFDF</color>
+
 </resources>

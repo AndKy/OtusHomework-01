@@ -77,7 +77,7 @@ class MoviesAdapter(
          if (i != selectedMovie) {
             unselectMovie()
             items[i].colorBackground = colorSelected
-            items[i].showDetailsButton = true
+            items[i].showDetailsButton = items[i].textAbout.isNotEmpty()
             notifyItemChanged(i)
         }
     }

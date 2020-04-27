@@ -15,25 +15,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val movies = mutableListOf(
-        MovieItem(R.drawable.movie_1_little, R.drawable.movie_1_big, R.string.movie_1_title, R.string.movie_1_desc, R.string.movie_1_about),
-        MovieItem(R.drawable.movie_2_little, R.drawable.movie_2_big, R.string.movie_2_title, R.string.movie_2_desc, R.string.movie_2_about),
-        MovieItem(R.drawable.movie_3_little, R.drawable.movie_3_big, R.string.movie_3_title, R.string.movie_3_desc, R.string.movie_3_about),
-        MovieItem(R.drawable.movie_1_little, R.drawable.movie_1_big, R.string.movie_1_title, R.string.movie_1_desc, R.string.movie_1_about),
-        MovieItem(R.drawable.movie_2_little, R.drawable.movie_2_big, R.string.movie_2_title, R.string.movie_2_desc, R.string.movie_2_about),
-        MovieItem(R.drawable.movie_3_little, R.drawable.movie_3_big, R.string.movie_3_title, R.string.movie_3_desc, R.string.movie_3_about),
-        MovieItem(R.drawable.movie_1_little, R.drawable.movie_1_big, R.string.movie_1_title, R.string.movie_1_desc, R.string.movie_1_about),
-        MovieItem(R.drawable.movie_2_little, R.drawable.movie_2_big, R.string.movie_2_title, R.string.movie_2_desc, R.string.movie_2_about),
-        MovieItem(R.drawable.movie_3_little, R.drawable.movie_3_big, R.string.movie_3_title, R.string.movie_3_desc, R.string.movie_3_about),
-        MovieItem(R.drawable.movie_1_little, R.drawable.movie_1_big, R.string.movie_1_title, R.string.movie_1_desc, R.string.movie_1_about),
-        MovieItem(R.drawable.movie_2_little, R.drawable.movie_2_big, R.string.movie_2_title, R.string.movie_2_desc, R.string.movie_2_about),
-        MovieItem(R.drawable.movie_3_little, R.drawable.movie_3_big, R.string.movie_3_title, R.string.movie_3_desc, R.string.movie_3_about)
-    )
+    private val movies = ArrayList<MovieItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        initMovieList()
         initPager()
         initClickListeners()
     }
@@ -82,6 +70,25 @@ class MainActivity : AppCompatActivity() {
             setNightMode(!isNightMode())
         }
 
+    }
+
+    private fun initMovieList() {
+        movies.addAll(
+            arrayListOf(
+                MovieItem(R.drawable.movie_1_little, R.drawable.movie_1_big, getString(R.string.movie_1_title), getString(R.string.movie_1_desc), getString(R.string.movie_1_about)),
+                MovieItem(R.drawable.movie_2_little, R.drawable.movie_2_big, getString(R.string.movie_2_title), getString(R.string.movie_2_desc), getString(R.string.movie_2_about)),
+                MovieItem(R.drawable.movie_3_little, R.drawable.movie_3_big, getString(R.string.movie_3_title), getString(R.string.movie_3_desc), getString(R.string.movie_3_about)),
+                Hollywood.makeMovie(),
+                Hollywood.makeMovie(),
+                Hollywood.makeMovie(),
+                Hollywood.makeMovie(),
+                Hollywood.makeMovie(),
+                Hollywood.makeMovie(),
+                Hollywood.makeMovie(),
+                Hollywood.makeMovie(),
+                Hollywood.makeMovie()
+            )
+        )
     }
 
     private fun log(msg: String) {

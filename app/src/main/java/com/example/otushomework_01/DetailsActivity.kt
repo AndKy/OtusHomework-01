@@ -21,8 +21,8 @@ class DetailsActivity : AppCompatActivity() {
         val imageView = findViewById<ImageView>(R.id.imageView)
         val btnInvite = findViewById<Button>(R.id.buttonInvite)
 
-        textViewTitle.text = getString(movie.idTextTitle)
-        textViewAbout.text = getString(movie.idTextAbout)
+        textViewTitle.text = movie.textTitle
+        textViewAbout.text = movie.textAbout
         imageView.setImageResource(movie.idImgScreenshot)
 
         btnInvite.setOnClickListener {
