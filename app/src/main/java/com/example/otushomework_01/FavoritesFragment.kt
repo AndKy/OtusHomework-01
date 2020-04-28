@@ -11,23 +11,19 @@ import kotlinx.android.synthetic.main.fragment_favorites.*
 
 class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
-    private var favorites = ArrayList<MovieItem>()
-    private var clickHandler: ClickHandler? = null
+    private fun main() = activity as IMainMovieActivity
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        favorites = (activity as MainActivity).movies
 
         initRecycler()
         initClickListeners()
     }
 
-
     private fun initRecycler() {
 
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        val moviesAdapter = FavoritesAdapter(LayoutInflater.from(context), favorites)
+        val moviesAdapter = FavoritesAdapter(LayoutInflater.from(context), main().getFavorites())
 
         recyclerFav.layoutManager = layoutManager
         recyclerFav.adapter = moviesAdapter
@@ -38,11 +34,19 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
         val moviesAdapter = recyclerFav.adapter as FavoritesAdapter
 
         moviesAdapter.setMovieClickListener { movieItem: MovieItem ->
-            clickHandler?.invoke(movieItem)
+            main().onFavoriteMovieClick(movieItem)
         }
     }
 
-    fun setOnClickListener(listener: ClickHandler) {
-        clickHandler = listener
+    fun updateMovie(movie: MovieItem) {
+        if (recyclerFav != null) {
+            val moviesAdapter = recyclerFav.adapter as FavoritesAdapter
+            moviesAdapter.updateMovie(movie)
+
+            val pos = moviesAdapter.getMoviePosition(movie)
+            if (pos >= 0)
+                recyclerFav.scrollToPosition(pos)
+        }
+
     }
 }

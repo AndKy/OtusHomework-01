@@ -30,4 +30,15 @@ class FavoritesAdapter(
     fun setMovieClickListener(listener: ClickHandler) {
         movieClickListener = listener
     }
+
+    fun getMoviePosition(movie: MovieItem): Int {
+        return items.indexOfFirst { it ===  movie }
+    }
+
+    fun updateMovie(movie: MovieItem) {
+        val pos = getMoviePosition(movie)
+        if (pos in items.indices) {
+            notifyItemChanged(pos)
+        }
+    }
 }

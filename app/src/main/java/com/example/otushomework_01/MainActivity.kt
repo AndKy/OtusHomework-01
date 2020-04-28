@@ -14,10 +14,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_movie.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity
+    : AppCompatActivity()
+    , IMainMovieActivity {
 
-    val movies = ArrayList<MovieItem>()
-    val favorites = ArrayList<MovieItem>()
+    private val movies = ArrayList<MovieItem>()
+    private val favorites = ArrayList<MovieItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,7 +137,44 @@ class MainActivity : AppCompatActivity() {
         return currentNightMode == Configuration.UI_MODE_NIGHT_YES
     }
 
+    override fun onFavoriteMovieClick(movie: MovieItem) {
+        // scroll to movies list page
+        viewpager.setCurrentItem(PAGE_MOVIES, true)
+        fragmentMovies().selectMovieAndScroll(movie)
+    }
+
+    override fun onMovieSelected(movie: MovieItem) {
+        fragmentFavorites().updateMovie(movie)
+    }
+
+    override fun onMovieUnselected(movie: MovieItem) {
+        fragmentFavorites().updateMovie(movie)
+    }
+
+    override fun getMovies(): ArrayList<MovieItem> {
+        return movies
+    }
+
+    override fun getFavorites(): ArrayList<MovieItem> {
+        return favorites
+    }
+
+    private fun fragmentMovies(): MovieListFragment {
+        return supportFragmentManager.findFragmentByTag(
+            "android:switcher:%d:%d".format(R.id.viewpager, PAGE_MOVIES)
+        ) as MovieListFragment
+    }
+
+    private fun fragmentFavorites(): FavoritesFragment {
+        return supportFragmentManager.findFragmentByTag(
+            "android:switcher:%d:%d".format(R.id.viewpager, PAGE_FAVORITES)
+        ) as FavoritesFragment
+    }
+
+
     companion object {
-        val STATE_MOVIE_LIST = "movie-list"
+        const val STATE_MOVIE_LIST = "movie-list"
+        const val PAGE_MOVIES = 0
+        const val PAGE_FAVORITES = 1
     }
 }

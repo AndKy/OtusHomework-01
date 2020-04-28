@@ -13,12 +13,14 @@ import kotlinx.android.synthetic.main.fragment_movie_list.*
 
 class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
 
+    private fun main() = activity as IMainMovieActivity
+
     private var movies = ArrayList<MovieItem>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        movies = (activity as MainActivity).movies
+        movies = main().getMovies()
 
         initRecycler()
         initClickListeners()
@@ -56,6 +58,17 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
                     log("onActivityResult: like='%b'".format(like))
                 }
             }
+        }
+    }
+
+    fun selectMovieAndScroll(movie: MovieItem) {
+        val moviesAdapter = recyclerMovies.adapter as MoviesAdapter
+        val i = movies.indexOfFirst { it === movie }
+
+        if (i >= 0) {
+            val pos = moviesAdapter.itemIndexToPosition(i)
+            moviesAdapter.selectedMovie = i
+            recyclerMovies.smoothScrollToPosition(pos)
         }
     }
 
@@ -106,6 +119,14 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
 
             moviesAdapter.append(Hollywood.makeNewMovie(movies))
             recyclerMovies.smoothScrollToPosition(moviesAdapter.getButtonPosition())
+        }
+
+        moviesAdapter.setMovieSelectedListener {
+            main().onMovieSelected(it)
+        }
+
+        moviesAdapter.setMovieUnselectedListener {
+            main().onMovieUnselected(it)
         }
     }
 

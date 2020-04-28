@@ -28,6 +28,8 @@ class MoviesAdapter(
     private var detailsClickListener: ClickHandler? = null
     private var addMovieClickListener: AddMovieClickHandler? = null
     private var movieLongClickListener: LongClickHandler? = null
+    private var movieSelectedListener: ClickHandler? = null
+    private var movieUnselectedListener: ClickHandler? = null
 
     var selectedMovie = -1
         set(value) {
@@ -111,6 +113,14 @@ class MoviesAdapter(
         movieLongClickListener = listener
     }
 
+    fun setMovieSelectedListener(listener: ClickHandler) {
+        movieSelectedListener = listener
+    }
+
+    fun setMovieUnselectedListener(listener: ClickHandler) {
+        movieUnselectedListener = listener
+    }
+
     fun getItemPosition(item: MovieItem): Int {
         val pos = items.indexOfFirst { it ===  item }
         return itemIndexToPosition(pos)
@@ -127,6 +137,8 @@ class MoviesAdapter(
                  items[i].colorBackground = colorSelected
                  items[i].showDetailsButton = items[i].textAbout.isNotEmpty()
                  notifyItemChanged(i)
+
+                 movieSelectedListener?.invoke(items[i])
              }
         }
     }
@@ -136,14 +148,16 @@ class MoviesAdapter(
             items[selectedMovie].colorBackground = colorBackground
             items[selectedMovie].showDetailsButton = false
             notifyItemChanged(selectedMovie)
+
+            movieUnselectedListener?.invoke(items[selectedMovie])
         }
     }
 
-    private fun itemIndexToPosition(i: Int) : Int {
+    fun itemIndexToPosition(i: Int) : Int {
         return i
     }
 
-    private fun itemPositionToIndex(pos: Int) : Int {
+    fun itemPositionToIndex(pos: Int) : Int {
         return pos
     }
 
