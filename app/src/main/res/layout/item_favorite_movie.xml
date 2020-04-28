@@ -18,18 +18,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginStart="16dp">
+        android:layout_marginStart="16dp"
+        android:layout_gravity="center">
 
         <TextView
             android:id="@+id/textViewTitle"
-            style="@style/TextTitle"
+            style="@style/FavTextTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Title" />
 
         <TextView
             android:id="@+id/textViewSubtitle"
-            style="@style/TextSubtitle"
+            style="@style/FavTextSubtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Subtitle" />

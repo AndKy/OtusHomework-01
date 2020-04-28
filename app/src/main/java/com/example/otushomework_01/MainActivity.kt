@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.item_movie.*
 class MainActivity : AppCompatActivity() {
 
     val movies = ArrayList<MovieItem>()
+    val favorites = ArrayList<MovieItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +25,9 @@ class MainActivity : AppCompatActivity() {
 
         if (!loadMovieList(savedInstanceState))
             initMovieList()
+
+        // Debug
+        favorites.addAll(movies)
 
         initPager()
         initClickListeners()
