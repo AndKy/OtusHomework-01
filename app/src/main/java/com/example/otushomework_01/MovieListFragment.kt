@@ -104,9 +104,8 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
         moviesAdapter.setAddMovieClickListener {
             log("AddMovieClickListener clicked")
 
-            movies.add(Hollywood.makeNewMovie(movies))
-            moviesAdapter.notifyItemInserted(movies.size - 1)
-            recyclerMovies.smoothScrollToPosition(movies.size)
+            moviesAdapter.append(Hollywood.makeNewMovie(movies))
+            recyclerMovies.smoothScrollToPosition(moviesAdapter.getButtonPosition())
         }
     }
 

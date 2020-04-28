@@ -80,6 +80,11 @@ class MoviesAdapter(
         return if (position < items.size) VIEW_TYPE_MOVIE else VIEW_TYPE_BUTTON
     }
 
+    fun append(movie: MovieItem) {
+        items.add(movie)
+        notifyItemInserted(items.size - 1)
+    }
+
     fun removeAt(position: Int) {
         selectedMovie = -1
 
