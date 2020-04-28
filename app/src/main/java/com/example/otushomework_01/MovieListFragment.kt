@@ -18,7 +18,7 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        movies = arguments?.getParcelableArrayList<MovieItem>(ARG_MOVIES)!!
+        movies = (activity as MainActivity).movies
 
         initRecycler()
         initClickListeners()
@@ -124,12 +124,5 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
     companion object {
         const val OUR_REQUEST_CODE = 1
         const val STATE_SELECTED_MOVIE = "selected_movie"
-        const val ARG_MOVIES = "movies"
-
-        fun newInstance(movies: List<MovieItem>) = MovieListFragment().apply {
-            arguments = Bundle(1).apply {
-                putParcelableArrayList(ARG_MOVIES, ArrayList(movies))
-            }
-        }
     }
 }

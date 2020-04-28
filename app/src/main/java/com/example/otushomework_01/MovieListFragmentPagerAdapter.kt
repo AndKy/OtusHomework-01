@@ -6,13 +6,12 @@ import androidx.fragment.app.FragmentPagerAdapter
 
 class MovieListFragmentPagerAdapter(
     fm: FragmentManager,
-    behavior: Int,
-    private val items: List<MovieItem>
+    behavior: Int
 ) : FragmentPagerAdapter(fm, behavior) {
 
     override fun getItem(position: Int): Fragment {
         return when(position) {
-            0 -> MovieListFragment.newInstance(items)
+            0 -> MovieListFragment()
             1 -> FavoritesFragment()
             else -> throw Exception("No such page")
         }

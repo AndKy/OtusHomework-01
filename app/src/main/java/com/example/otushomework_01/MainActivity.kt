@@ -11,19 +11,31 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.item_movie.*
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val movies = ArrayList<MovieItem>()
+    val movies = ArrayList<MovieItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initMovieList()
+        if (!loadMovieList(savedInstanceState))
+            initMovieList()
+
         initPager()
         initClickListeners()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.apply {
+
+            putParcelableArrayList(STATE_MOVIE_LIST, movies)
+            log("onSaveInstanceState: save %d movies".format(movies.size))
+        }
     }
 
     override fun onBackPressed() {
@@ -52,8 +64,7 @@ class MainActivity : AppCompatActivity() {
     private fun initPager() {
         val adapter =  MovieListFragmentPagerAdapter(
             supportFragmentManager,
-            FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,
-            movies
+            FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
         )
         viewpager.adapter = adapter
 
@@ -70,6 +81,20 @@ class MainActivity : AppCompatActivity() {
             setNightMode(!isNightMode())
         }
 
+    }
+
+    private fun loadMovieList(savedInstanceState: Bundle?) : Boolean {
+        return if (savedInstanceState != null) {
+            val items = savedInstanceState.getParcelableArrayList<MovieItem>(STATE_MOVIE_LIST)
+            if (items != null) {
+                movies.addAll(items)
+                true
+            }
+            else
+                false
+        } else {
+             false
+        }
     }
 
     private fun initMovieList() {
@@ -104,5 +129,9 @@ class MainActivity : AppCompatActivity() {
     private fun isNightMode() : Boolean {
         val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         return currentNightMode == Configuration.UI_MODE_NIGHT_YES
+    }
+
+    companion object {
+        val STATE_MOVIE_LIST = "movie-list"
     }
 }
