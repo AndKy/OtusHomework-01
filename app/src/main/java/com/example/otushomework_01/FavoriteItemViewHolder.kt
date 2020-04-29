@@ -25,6 +25,8 @@ class FavoriteItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
             itemView.textViewSubtitle.visibility = View.VISIBLE
         }
 
+        itemView.textViewNumber.text = "#%d".format(adapterPosition + 1)
+
         if (item.isSelected)
             itemView.setBackgroundResource(R.color.colorSelection)
         else if(adapterPosition % 2 == 0)

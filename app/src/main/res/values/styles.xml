@@ -27,6 +27,13 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <!-- Number text style -->
+    <style name="FavTextNumber">
+        <item name="android:textColor">@color/colorTitle</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <!-- Subtitle text style -->
     <style name="FavTextSubtitle">
         <item name="android:textSize">16sp</item>
