@@ -93,9 +93,9 @@ class MainActivity
         Application.addListener(ApplicationUtils.makeListenerFor(fragment))
     }
 
-    override fun onStop() {
+    override fun onDestroy() {
         Application.clearListeners()
-        super.onStop()
+        super.onDestroy()
     }
 
     override fun onBackPressed() {
