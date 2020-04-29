@@ -18,10 +18,12 @@ class MainActivity
     : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // movies must be added before onCreate to avoid call fragment handlers when it not created yet
+        initMovieList()
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initMovieList()
         initPager()
         initClickListeners()
     }
