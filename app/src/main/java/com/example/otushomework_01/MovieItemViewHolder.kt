@@ -27,7 +27,8 @@ class MovieItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             itemView.textViewSubtitle.visibility = View.VISIBLE
         }
 
+        itemView.toggleFav.isChecked = item.isFavorite
         itemView.item.setBackgroundColor(item.colorBackground)
-        itemView.buttonDetails.visibility = if (item.showDetailsButton) View.VISIBLE else View.GONE
+        itemView.buttonDetails.visibility = if (item.isSelected) View.VISIBLE else View.GONE
     }
 }

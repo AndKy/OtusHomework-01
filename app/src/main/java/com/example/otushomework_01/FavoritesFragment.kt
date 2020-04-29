@@ -49,4 +49,15 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
         }
 
     }
+
+    fun onFavoriteMovieAppended() {
+        val moviesAdapter = recyclerFav.adapter as FavoritesAdapter
+        moviesAdapter.notifyItemInserted(main().getFavorites().size - 1)
+    }
+
+    fun onFavoriteMovieRemovedAt(pos: Int) {
+        val moviesAdapter = recyclerFav.adapter as FavoritesAdapter
+        moviesAdapter.notifyItemRemoved(pos)
+    }
+
 }

@@ -2,7 +2,6 @@ package com.example.otushomework_01
 
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.ColorDrawable
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -33,7 +32,7 @@ abstract class MoviesSwipeToDelete(context: Context?)
         if (viewHolder is MovieItemViewHolder) {
             val movie = viewHolder.movie
             if (movie != null)
-                if(!movie.showDetailsButton)
+                if(!movie.isSelected)
                     return 0
         }
         return super.getMovementFlags(recyclerView, viewHolder)

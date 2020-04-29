@@ -128,6 +128,10 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
         moviesAdapter.setMovieUnselectedListener {
             main().onMovieUnselected(it)
         }
+
+        moviesAdapter.setFavoriteClickListener {
+            main().onToggleFavoriteMovie(it)
+        }
     }
 
     private fun openDetailsWindow(movieItem: MovieItem) {

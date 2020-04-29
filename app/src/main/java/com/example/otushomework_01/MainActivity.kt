@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.item_movie.*
 
 
 class MainActivity
@@ -27,9 +26,6 @@ class MainActivity
 
         if (!loadMovieList(savedInstanceState))
             initMovieList()
-
-        // Debug
-        favorites.addAll(movies)
 
         initPager()
         initClickListeners()
@@ -141,6 +137,24 @@ class MainActivity
         // scroll to movies list page
         viewpager.setCurrentItem(PAGE_MOVIES, true)
         fragmentMovies().selectMovieAndScroll(movie)
+    }
+
+    override fun onToggleFavoriteMovie(movie: MovieItem) {
+        movie.isFavorite = !movie.isFavorite
+
+        val pos = favorites.indexOfFirst { it === movie }
+        if (movie.isFavorite) {
+            if (pos == -1) {
+                favorites.add(movie)
+                fragmentFavorites().onFavoriteMovieAppended()
+            }
+        }
+        else {
+            if (pos >= 0) {
+                favorites.removeAt(pos)
+                fragmentFavorites().onFavoriteMovieRemovedAt(pos)
+            }
+        }
     }
 
     override fun onMovieSelected(movie: MovieItem) {

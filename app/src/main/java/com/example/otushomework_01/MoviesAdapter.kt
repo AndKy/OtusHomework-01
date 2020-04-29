@@ -25,6 +25,7 @@ class MoviesAdapter(
     }
 
     private var movieClickListener: ClickHandler? = null
+    private var favoriteClickListener: ClickHandler? = null
     private var detailsClickListener: ClickHandler? = null
     private var addMovieClickListener: AddMovieClickHandler? = null
     private var movieLongClickListener: LongClickHandler? = null
@@ -71,6 +72,7 @@ class MoviesAdapter(
                 holder.itemView.setOnClickListener { movieClickListener?.invoke(movie) }
                 holder.itemView.buttonDetails.setOnClickListener { detailsClickListener?.invoke(movie) }
                 holder.itemView.setOnLongClickListener {  movieLongClickListener?.invoke(movie) ?: false }
+                holder.itemView.toggleFav.setOnClickListener { favoriteClickListener?.invoke(movie) }
             }
         }
         else if (holder is ButtonsItemViewHolder) {
@@ -99,6 +101,10 @@ class MoviesAdapter(
 
     fun setMovieClickListener(listener: ClickHandler) {
         movieClickListener = listener
+    }
+
+    fun setFavoriteClickListener(listener: ClickHandler) {
+        favoriteClickListener = listener
     }
 
     fun setDetailsClickListener(listener: ClickHandler) {
@@ -135,7 +141,7 @@ class MoviesAdapter(
             unselectMovie()
              if (i in items.indices) {
                  items[i].colorBackground = colorSelected
-                 items[i].showDetailsButton = items[i].textAbout.isNotEmpty()
+                 items[i].isSelected = items[i].textAbout.isNotEmpty()
                  notifyItemChanged(i)
 
                  movieSelectedListener?.invoke(items[i])
@@ -146,7 +152,7 @@ class MoviesAdapter(
     private fun unselectMovie() {
         if (selectedMovie in items.indices) {
             items[selectedMovie].colorBackground = colorBackground
-            items[selectedMovie].showDetailsButton = false
+            items[selectedMovie].isSelected = false
             notifyItemChanged(selectedMovie)
 
             movieUnselectedListener?.invoke(items[selectedMovie])
