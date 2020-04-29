@@ -1,10 +1,14 @@
 package com.example.otushomework_01
 
+import android.graphics.Color
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_movie.view.*
 
 class MovieItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    var colorSelected = Color.TRANSPARENT
+    var colorBackground = Color.TRANSPARENT
 
     var movie: MovieItem? = null
         private set
@@ -28,7 +32,12 @@ class MovieItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
 
         itemView.toggleFav.isChecked = item.isFavorite
-        itemView.item.setBackgroundColor(item.colorBackground)
         itemView.buttonDetails.visibility = if (item.isSelected) View.VISIBLE else View.GONE
+        itemView.item.setBackgroundColor(
+            if (item.isSelected)
+                colorSelected
+            else
+                colorBackground
+        )
     }
 }

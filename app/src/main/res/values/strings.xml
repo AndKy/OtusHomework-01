@@ -22,6 +22,8 @@
     <string name="movies">Фильмы</string>
     <string name="favorites">Избранное</string>
     <string name="add_movie">Добавить фильм</string>
+    <string name="movie_added_to_favorite">Фильм \'%s\' добавлен в избранное!</string>
+    <string name="movie_removed_from_favorites">Фильм \'%s\' удален из избранного!</string>
 </resources>
 
 

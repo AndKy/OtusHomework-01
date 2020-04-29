@@ -1,17 +1,30 @@
 package com.example.otushomework_01
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_favorites.*
 
-class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
+interface FavoritesFragmentEventHandler {
+    fun onMovieAdded(movie: MovieItem, i: Int)
+    fun onMovieRemoved(movie: MovieItem, i: Int)
+    fun onMovieChanged(movie: MovieItem)
+    fun onMovieSelected(movie: MovieItem)
+}
 
-    private fun main() = activity as IMainMovieActivity
+class FavoritesFragment
+    : Fragment(R.layout.fragment_favorites)
+    , FavoritesFragmentEventHandler {
+
+    interface Listener : FavoritesAdapter.Listener
+
+    var listener: Listener? = null
+    var movies: List<MovieItem> = listOf()
+
+    private val adapter: FavoritesAdapter
+        get() = recyclerFav.adapter as FavoritesAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -23,7 +36,7 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     private fun initRecycler() {
 
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        val moviesAdapter = FavoritesAdapter(LayoutInflater.from(context), main().getFavorites())
+        val moviesAdapter = FavoritesAdapter(LayoutInflater.from(context), movies)
 
         recyclerFav.layoutManager = layoutManager
         recyclerFav.adapter = moviesAdapter
@@ -31,33 +44,27 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     }
 
     private fun initClickListeners() {
-        val moviesAdapter = recyclerFav.adapter as FavoritesAdapter
-
-        moviesAdapter.setMovieClickListener { movieItem: MovieItem ->
-            main().onFavoriteMovieClick(movieItem)
-        }
+        adapter.listener = listener
     }
 
-    fun updateMovie(movie: MovieItem) {
-        if (recyclerFav != null) {
-            val moviesAdapter = recyclerFav.adapter as FavoritesAdapter
-            moviesAdapter.updateMovie(movie)
-
-            val pos = moviesAdapter.getMoviePosition(movie)
-            if (pos >= 0)
-                recyclerFav.scrollToPosition(pos)
-        }
-
+    override fun onMovieAdded(movie: MovieItem, i: Int) {
+        adapter.notifyItemInserted(i)
     }
 
-    fun onFavoriteMovieAppended() {
-        val moviesAdapter = recyclerFav.adapter as FavoritesAdapter
-        moviesAdapter.notifyItemInserted(main().getFavorites().size - 1)
+    override fun onMovieRemoved(movie: MovieItem, i: Int) {
+        adapter.notifyItemRemoved(i)
     }
 
-    fun onFavoriteMovieRemovedAt(pos: Int) {
-        val moviesAdapter = recyclerFav.adapter as FavoritesAdapter
-        moviesAdapter.notifyItemRemoved(pos)
+    override fun onMovieChanged(movie: MovieItem) {
+        val i = movies.indexOfFirst { it === movie }
+        if (i in movies.indices)
+            adapter.notifyItemChanged(i)
+    }
+
+    override fun onMovieSelected(movie: MovieItem) {
+        val i = movies.indexOfFirst { it === movie }
+        if (i in movies.indices)
+            recyclerFav.scrollToPosition(i)
     }
 
 }

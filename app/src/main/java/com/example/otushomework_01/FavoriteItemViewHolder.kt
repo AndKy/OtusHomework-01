@@ -1,10 +1,14 @@
 package com.example.otushomework_01
 
+import android.graphics.Color
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_favorite_movie.view.*
 
 class FavoriteItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    var colorSelected = Color.TRANSPARENT
+    var colorBackground = Color.TRANSPARENT
 
     var movie: MovieItem? = null
         private set
@@ -12,7 +16,6 @@ class FavoriteItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     fun bind(item: MovieItem) {
         movie = item
 
-        // Implicit findViewById<>
         itemView.imageLogo.setImageResource(item.idImgLogo)
 
         val title = item.textTitle.split("\n")
@@ -25,6 +28,11 @@ class FavoriteItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
             itemView.textViewSubtitle.text = title[1]
             itemView.textViewSubtitle.visibility = View.VISIBLE
         }
-        itemView.item.setBackgroundColor(item.colorBackground)
+        itemView.item.setBackgroundColor(
+            if (item.isSelected)
+                colorSelected
+            else
+                colorBackground
+        )
     }
 }

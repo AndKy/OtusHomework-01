@@ -1,47 +1,104 @@
 package com.example.otushomework_01
 
+import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
-
 class MainActivity
-    : AppCompatActivity()
-    , IMainMovieActivity {
-
-    private val movies = ArrayList<MovieItem>()
-    private val favorites = ArrayList<MovieItem>()
+    : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (!loadMovieList(savedInstanceState))
-            initMovieList()
-
+        initMovieList()
         initPager()
         initClickListeners()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.apply {
+    override fun onAttachFragment(fragment: androidx.fragment.app.Fragment) {
+        super.onAttachFragment(fragment)
 
-            putParcelableArrayList(STATE_MOVIE_LIST, movies)
-            log("onSaveInstanceState: save %d movies".format(movies.size))
+        if (fragment is MovieListFragment) {
+            attachFragment(fragment)
+        }
+        else if (fragment is FavoritesFragment) {
+            attachFragment(fragment)
         }
     }
 
-    override fun onBackPressed() {
+    private fun attachFragment(fragment: MovieListFragment) {
+        // set movies list
+        fragment.movies = Application.getMovies()
 
+        // subscribe
+        fragment.listener = object : MovieListFragment.Listener {
+            override fun onMovieSwipeDelete(movieItem: MovieItem) {
+                Application.removeMovie(movieItem)
+            }
+
+            override fun onMovieClick(movieItem: MovieItem) {
+                Application.setSelectedMovie(movieItem)
+            }
+
+            override fun onMovieFavButtonClick(movieItem: MovieItem) {
+                Application.favMovieToggle(movieItem)
+                Application.setSelectedMovie(movieItem)
+
+                val msg =
+                    if (movieItem.isFavorite)
+                        getString(R.string.movie_added_to_favorite).format(movieItem.textTitle.replace("\n", " "))
+                    else
+                        getString(R.string.movie_removed_from_favorites).format(movieItem.textTitle.replace("\n", " "))
+
+                Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onMovieDetailsButtonClick(movieItem: MovieItem) {
+                openDetailsWindow(movieItem)
+            }
+
+            override fun onAddMovieButtonClick() {
+                Application.addNewMovie()
+            }
+        }
+
+        // attach fragment to data model
+        Application.addListener(ApplicationUtils.makeListenerFor(fragment))
+    }
+
+    private fun attachFragment(fragment: FavoritesFragment) {
+        // set movies list
+        fragment.movies = Application.getFavMovies()
+
+        // subscribe
+        fragment.listener = object : FavoritesFragment.Listener {
+            override fun onFavMovieClick(movieItem: MovieItem) {
+                Application.setSelectedMovie(movieItem)
+                viewpager.setCurrentItem(PAGE_MOVIES, true)
+            }
+        }
+
+        // attach fragment to data model
+        Application.addListener(ApplicationUtils.makeListenerFor(fragment))
+    }
+
+    override fun onStop() {
+        Application.clearListeners()
+        super.onStop()
+    }
+
+    override fun onBackPressed() {
         val dialog : Dialog = object : Dialog(this) {
 
             override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,6 +120,30 @@ class MainActivity
         dialog.show()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == OUR_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                data?.let {
+                    val comment = it.getStringExtra(DetailsActivity.STATE_COMMENT)
+                    val like = it.getBooleanExtra(DetailsActivity.STATE_LIKE, false)
+
+                    log("onActivityResult: comment='%s'".format(comment))
+                    log("onActivityResult: like='%b'".format(like))
+                }
+            }
+        }
+    }
+
+    private fun openDetailsWindow(movieItem: MovieItem) {
+        val intent = Intent(this, DetailsActivity::class.java).apply {
+            putExtra(STATE_SELECTED_MOVIE, movieItem)
+        }
+
+        startActivityForResult(intent, OUR_REQUEST_CODE)
+    }
+
     private fun initPager() {
         val adapter =  MovieListFragmentPagerAdapter(
             supportFragmentManager,
@@ -76,41 +157,23 @@ class MainActivity
     }
 
     private fun initClickListeners() {
-
-        // Day-night scheme button
-        val btn = findViewById<ImageButton>(R.id.buttonDayNight)
-        btn.setOnClickListener {
+        buttonDayNight.setOnClickListener {
             setNightMode(!isNightMode())
-        }
-
-    }
-
-    private fun loadMovieList(savedInstanceState: Bundle?) : Boolean {
-        return if (savedInstanceState != null) {
-            val items = savedInstanceState.getParcelableArrayList<MovieItem>(STATE_MOVIE_LIST)
-            if (items != null) {
-                movies.addAll(items)
-                true
-            }
-            else
-                false
-        } else {
-             false
         }
     }
 
     private fun initMovieList() {
-        movies.addAll(
-            arrayListOf(
+        if (Application.getMovies().isEmpty()) {
+            arrayOf(
                 MovieItem(R.drawable.movie_1_little, R.drawable.movie_1_big, getString(R.string.movie_1_title), getString(R.string.movie_1_desc), getString(R.string.movie_1_about)),
                 MovieItem(R.drawable.movie_2_little, R.drawable.movie_2_big, getString(R.string.movie_2_title), getString(R.string.movie_2_desc), getString(R.string.movie_2_about)),
                 MovieItem(R.drawable.movie_3_little, R.drawable.movie_3_big, getString(R.string.movie_3_title), getString(R.string.movie_3_desc), getString(R.string.movie_3_about))
-            )
-        )
+            ).forEach { Application.addMovie(it) }
 
-        // Add number of random movies
-        repeat(9) {
-            movies.add(Hollywood.makeNewMovie(movies))
+            // Add number of random movies
+            repeat(9) {
+                Application.addNewMovie()
+            }
         }
     }
 
@@ -133,61 +196,9 @@ class MainActivity
         return currentNightMode == Configuration.UI_MODE_NIGHT_YES
     }
 
-    override fun onFavoriteMovieClick(movie: MovieItem) {
-        // scroll to movies list page
-        viewpager.setCurrentItem(PAGE_MOVIES, true)
-        fragmentMovies().selectMovieAndScroll(movie)
-    }
-
-    override fun onToggleFavoriteMovie(movie: MovieItem) {
-        movie.isFavorite = !movie.isFavorite
-
-        val pos = favorites.indexOfFirst { it === movie }
-        if (movie.isFavorite) {
-            if (pos == -1) {
-                favorites.add(movie)
-                fragmentFavorites().onFavoriteMovieAppended()
-            }
-        }
-        else {
-            if (pos >= 0) {
-                favorites.removeAt(pos)
-                fragmentFavorites().onFavoriteMovieRemovedAt(pos)
-            }
-        }
-    }
-
-    override fun onMovieSelected(movie: MovieItem) {
-        fragmentFavorites().updateMovie(movie)
-    }
-
-    override fun onMovieUnselected(movie: MovieItem) {
-        fragmentFavorites().updateMovie(movie)
-    }
-
-    override fun getMovies(): ArrayList<MovieItem> {
-        return movies
-    }
-
-    override fun getFavorites(): ArrayList<MovieItem> {
-        return favorites
-    }
-
-    private fun fragmentMovies(): MovieListFragment {
-        return supportFragmentManager.findFragmentByTag(
-            "android:switcher:%d:%d".format(R.id.viewpager, PAGE_MOVIES)
-        ) as MovieListFragment
-    }
-
-    private fun fragmentFavorites(): FavoritesFragment {
-        return supportFragmentManager.findFragmentByTag(
-            "android:switcher:%d:%d".format(R.id.viewpager, PAGE_FAVORITES)
-        ) as FavoritesFragment
-    }
-
-
     companion object {
-        const val STATE_MOVIE_LIST = "movie-list"
+        const val STATE_SELECTED_MOVIE = "selected-movie"
+        const val OUR_REQUEST_CODE = 1
         const val PAGE_MOVIES = 0
         const val PAGE_FAVORITES = 1
     }

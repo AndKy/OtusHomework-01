@@ -38,7 +38,6 @@ abstract class MoviesSwipeToDelete(context: Context?)
         return super.getMovementFlags(recyclerView, viewHolder)
     }
 
-
     override fun onChildDraw(
         c: Canvas,
         recyclerView: RecyclerView,

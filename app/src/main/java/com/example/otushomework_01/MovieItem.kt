@@ -10,7 +10,6 @@ data class MovieItem (
     val textTitle : String,
     val textDescription : String,
     val textAbout : String,
-    var colorBackground: Int = 0,
     var isSelected: Boolean = false,
     var isFavorite: Boolean = false
 ) : Parcelable

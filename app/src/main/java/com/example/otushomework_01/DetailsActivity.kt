@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
-import com.example.otushomework_01.MovieListFragment.Companion.STATE_SELECTED_MOVIE
+import com.example.otushomework_01.MainActivity.Companion.STATE_SELECTED_MOVIE
 
 class DetailsActivity : AppCompatActivity() {
 
