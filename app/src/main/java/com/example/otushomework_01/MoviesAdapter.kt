@@ -1,11 +1,8 @@
 package com.example.otushomework_01
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_button.view.*
 import kotlinx.android.synthetic.main.item_movie.view.*
@@ -27,19 +24,13 @@ class MoviesAdapter(
         fun onAddMovieButtonClick()
     }
 
-    private var colorSelected = Color.TRANSPARENT
-    private var colorBackground = Color.TRANSPARENT
-
     var listener: Listener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         log("onCreateViewHolder $viewType")
 
         return if (viewType == VIEW_TYPE_MOVIE)
-            MovieItemViewHolder(inflater.inflate(R.layout.item_movie, parent, false)).apply {
-                colorBackground = this@MoviesAdapter.colorBackground
-                colorSelected = this@MoviesAdapter.colorSelected
-            }
+            MovieItemViewHolder(inflater.inflate(R.layout.item_movie, parent, false))
         else
             ButtonsItemViewHolder(inflater.inflate(R.layout.item_button, parent, false))
     }
@@ -69,13 +60,5 @@ class MoviesAdapter(
 
     private fun log(msg: String) {
         Log.d("MoviesAdapter", msg)
-    }
-
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        super.onAttachedToRecyclerView(recyclerView)
-
-        // We need to determine some colors
-        colorBackground = (recyclerView.background as? ColorDrawable?)?.color ?: Color.TRANSPARENT
-        colorSelected = ContextCompat.getColor(recyclerView.context, R.color.colorSelection)
     }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_favorites.*
 
@@ -41,6 +42,9 @@ class FavoritesFragment
         recyclerFav.layoutManager = layoutManager
         recyclerFav.adapter = moviesAdapter
         recyclerFav.scrollToPosition(0)
+
+        val dividerItemDecoration = DividerItemDecoration(context, layoutManager.orientation)
+        recyclerFav.addItemDecoration(dividerItemDecoration)
     }
 
     private fun initClickListeners() {
