@@ -9,4 +9,9 @@
     <string name="yes_button">Yes</string>
     <string name="no_button">No</string>
     <string name="confirm_button">" Are you sure you want to exit?"</string>
+    <string name="movies">Movies</string>
+    <string name="favorites">Favorites</string>
+    <string name="add_movie">Add movie</string>
+    <string name="movie_added_to_favorite">Movie \'%s\' have been added to favorites!</string>
+    <string name="movie_removed_from_favorites">Movie \'%s\' have been removed from favorites!</string>
 </resources>

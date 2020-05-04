@@ -6,44 +6,24 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
+import com.example.otushomework_01.MainActivity.Companion.STATE_SELECTED_MOVIE
 
 class DetailsActivity : AppCompatActivity() {
-
-    private var _movie = 0
-
-    private var _images =
-        intArrayOf(
-            R.drawable.movie_1_big,
-            R.drawable.movie_2_big,
-            R.drawable.movie_3_big
-        )
-    private var _titles =
-        intArrayOf(
-            R.string.movie_1_title,
-            R.string.movie_2_title,
-            R.string.movie_3_title
-        )
-    private var _aboutTexts =
-        intArrayOf(
-            R.string.movie_1_about,
-            R.string.movie_2_about,
-            R.string.movie_3_about
-        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
 
-        _movie = intent.getIntExtra(MainActivity.STATE_SELECTED_MOVIE, 0)
+        val movie = intent.getParcelableExtra<MovieItem>(STATE_SELECTED_MOVIE)
 
         val textViewTitle = findViewById<TextView>(R.id.textViewTitle)
         val textViewAbout = findViewById<TextView>(R.id.textViewAbout)
         val imageView = findViewById<ImageView>(R.id.imageView)
         val btnInvite = findViewById<Button>(R.id.buttonInvite)
 
-        textViewTitle.text = getString(_titles[_movie])
-        textViewAbout.text = getString(_aboutTexts[_movie])
-        imageView.setImageResource(_images[_movie])
+        textViewTitle.text = movie.textTitle
+        textViewAbout.text = movie.textAbout
+        imageView.setImageResource(movie.idImgScreenshot)
 
         btnInvite.setOnClickListener {
             val inviteMsg = getString(R.string.invite_msg).format(textViewTitle.text)
@@ -99,7 +79,6 @@ class DetailsActivity : AppCompatActivity() {
     private fun log(msg: String) {
         Log.d("details:", msg)
     }
-
 
     companion object {
         const val STATE_LIKE = "like"

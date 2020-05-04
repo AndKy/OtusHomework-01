@@ -4,74 +4,122 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.text.method.CharacterPickerDialog
 import android.util.Log
-import android.util.TypedValue
 import android.widget.Button
-import android.widget.ImageButton
-import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentPagerAdapter
+import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.activity_main.*
 
-
-class MainActivity : AppCompatActivity() {
-
-    private var _selectedMovie: Int = -1
-    private var _buttons =
-        intArrayOf(
-            R.id.buttonDetails1,
-            R.id.buttonDetails2,
-            R.id.buttonDetails3
-        )
-    private var _cells =
-        intArrayOf(
-            R.id.cell1,
-            R.id.cell2,
-            R.id.cell3
-        )
+class MainActivity
+    : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // movies must be added before onCreate to avoid call fragment handlers when it not created yet
+        initMovieList()
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        for ((i, id) in _cells.withIndex()) {
-            val layout = findViewById<LinearLayout>(id)
-            layout.setOnClickListener {
-                selectMovie(i)
-            }
+        initPager()
+        initClickListeners()
+    }
+
+    override fun onAttachFragment(fragment: androidx.fragment.app.Fragment) {
+        super.onAttachFragment(fragment)
+
+        if (fragment is MovieListFragment) {
+            attachFragment(fragment)
         }
-
-        for ((i, id) in _buttons.withIndex()) {
-            val btn = findViewById<Button>(id)
-            btn.setOnClickListener {
-                openDetailsWindow(i)
-            }
-        }
-
-        // Day-night scheme button
-        val btn = findViewById<ImageButton>(R.id.buttonDayNight)
-        btn.setOnClickListener {
-            setNightMode(!isNightMode())
-        }
-
-        savedInstanceState?.let {
-            val selMovie = it.getInt(STATE_SELECTED_MOVIE, -1)
-
-            selectMovie(selMovie)
-            log("onCreate: _selectedMovie = %d".format(selMovie))
+        else if (fragment is FavoritesFragment) {
+            attachFragment(fragment)
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
+    private fun attachFragment(fragment: MovieListFragment) {
+        // set movies list
+        fragment.movies = Application.getMovies()
 
-        outState.apply {
-            putInt(STATE_SELECTED_MOVIE, _selectedMovie)
-            log("onSaveInstanceState: _selectedMovie = %d".format(_selectedMovie))
+        // subscribe
+        fragment.listener = object : MovieListFragment.Listener {
+            override fun onMovieSwipeDelete(movieItem: MovieItem) {
+                Application.removeMovie(movieItem)
+            }
+
+            override fun onMovieClick(movieItem: MovieItem) {
+                Application.setSelectedMovie(movieItem)
+            }
+
+            override fun onMovieFavButtonClick(movieItem: MovieItem) {
+                Application.favMovieToggle(movieItem)
+                Application.setSelectedMovie(movieItem)
+
+                val msg =
+                    if (movieItem.isFavorite)
+                        getString(R.string.movie_added_to_favorite).format(movieItem.textTitle.replace("\n", " "))
+                    else
+                        getString(R.string.movie_removed_from_favorites).format(movieItem.textTitle.replace("\n", " "))
+
+                Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onMovieDetailsButtonClick(movieItem: MovieItem) {
+                openDetailsWindow(movieItem)
+            }
+
+            override fun onAddMovieButtonClick() {
+                Application.addNewMovie()
+            }
         }
+
+        // attach fragment to data model
+        Application.addListener(ApplicationUtils.makeListenerFor(fragment))
+    }
+
+    private fun attachFragment(fragment: FavoritesFragment) {
+        // set movies list
+        fragment.movies = Application.getFavMovies()
+
+        // subscribe
+        fragment.listener = object : FavoritesFragment.Listener {
+            override fun onFavMovieClick(movieItem: MovieItem) {
+                Application.setSelectedMovie(movieItem)
+                viewpager.setCurrentItem(PAGE_MOVIES, true)
+            }
+        }
+
+        // attach fragment to data model
+        Application.addListener(ApplicationUtils.makeListenerFor(fragment))
+    }
+
+    override fun onDestroy() {
+        Application.clearListeners()
+        super.onDestroy()
+    }
+
+    override fun onBackPressed() {
+        val dialog : Dialog = object : Dialog(this) {
+
+            override fun onCreate(savedInstanceState: Bundle?) {
+                super.onCreate(savedInstanceState)
+                setContentView(R.layout.dialog_close)
+
+                val btnYes = findViewById<Button>(R.id.buttonYes)
+                val btnNo = findViewById<Button>(R.id.buttonNo)
+
+                btnYes.setOnClickListener() {
+                    finish()
+                }
+
+                btnNo.setOnClickListener() {
+                    dismiss()
+                }
+            }
+        }
+        dialog.show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -90,78 +138,49 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-
-        val dialog : Dialog = object : Dialog(this) {
-
-            override fun onCreate(savedInstanceState: Bundle?) {
-                super.onCreate(savedInstanceState)
-                setContentView(R.layout.dialog_close)
-
-                val btnYes = findViewById<Button>(R.id.buttonYes)
-                val btnNo = findViewById<Button>(R.id.buttonNo)
-
-                btnYes.setOnClickListener() {
-                    finish()
-                }
-
-                btnNo.setOnClickListener() {
-                    dismiss()
-                }
-
-            }
+    private fun openDetailsWindow(movieItem: MovieItem) {
+        val intent = Intent(this, DetailsActivity::class.java).apply {
+            putExtra(STATE_SELECTED_MOVIE, movieItem)
         }
-        dialog.show()
+
+        startActivityForResult(intent, OUR_REQUEST_CODE)
     }
 
-    private fun openDetailsWindow(number: Int) {
-        val intent = Intent(this, DetailsActivity::class.java).apply {
-            putExtra(STATE_SELECTED_MOVIE, number)
-        }
+    private fun initPager() {
+        val adapter =  MovieListFragmentPagerAdapter(
+            supportFragmentManager,
+            FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+        )
+        viewpager.adapter = adapter
 
-        log("openDetailsWindow: number = %d".format(number))
-        startActivityForResult(intent, OUR_REQUEST_CODE)
+        // link together pager and tabs
+        viewpager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
+        tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(viewpager))
+    }
+
+    private fun initClickListeners() {
+        buttonDayNight.setOnClickListener {
+            setNightMode(!isNightMode())
+        }
+    }
+
+    private fun initMovieList() {
+        if (Application.getMovies().isEmpty()) {
+            arrayOf(
+                MovieItem(R.drawable.movie_1_little, R.drawable.movie_1_big, getString(R.string.movie_1_title), getString(R.string.movie_1_desc), getString(R.string.movie_1_about)),
+                MovieItem(R.drawable.movie_2_little, R.drawable.movie_2_big, getString(R.string.movie_2_title), getString(R.string.movie_2_desc), getString(R.string.movie_2_about)),
+                MovieItem(R.drawable.movie_3_little, R.drawable.movie_3_big, getString(R.string.movie_3_title), getString(R.string.movie_3_desc), getString(R.string.movie_3_about))
+            ).forEach { Application.addMovie(it) }
+
+            // Add number of random movies
+            repeat(9) {
+                Application.addNewMovie()
+            }
+        }
     }
 
     private fun log(msg: String) {
         Log.d("main", msg)
-    }
-
-    private fun setSelectedCellBackground(number: Int) {
-        for ((i, id) in _cells.withIndex()) {
-            val layout = findViewById<LinearLayout>(id)
-            layout.setBackgroundColor(
-                if (i == number)
-                    ContextCompat.getColor(layout.context, R.color.colorSelection)
-                else
-                    getBackgroundColor()
-            )
-        }
-    }
-
-    private fun getBackgroundColor() : Int {
-        val a = TypedValue()
-        theme.resolveAttribute(android.R.attr.windowBackground, a, true)
-        if (a.type >= TypedValue.TYPE_FIRST_COLOR_INT && a.type <= TypedValue.TYPE_LAST_COLOR_INT) { // windowBackground is a color
-            return a.data
-        } else { // windowBackground is not a color, probably a drawable
-            throw Exception("Background type is drawable, but expected color")
-        }
-    }
-
-    private fun displayDetailsButton(number: Int) {
-        for ((i, id) in _buttons.withIndex()) {
-            val btn = findViewById<Button>(id)
-            btn.visibility = if (i == number) Button.VISIBLE else Button.GONE
-        }
-    }
-
-    private fun selectMovie(number: Int) {
-        _selectedMovie = number
-        displayDetailsButton(number)
-        setSelectedCellBackground(number)
-
-        log("select movie #%d".format(number))
     }
 
     private fun setNightMode(enable: Boolean) {
@@ -180,7 +199,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val STATE_SELECTED_MOVIE = "selected_movie"
+        const val STATE_SELECTED_MOVIE = "selected-movie"
         const val OUR_REQUEST_CODE = 1
+        const val PAGE_MOVIES = 0
+        const val PAGE_FAVORITES = 1
     }
 }

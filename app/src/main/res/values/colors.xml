@@ -2,4 +2,7 @@
 <resources>
     <color name="colorSelection">#d0d0ff</color>
     <color name="colorTitle">#000000</color>
+    <color name="colorSubtitle">#323131</color>
+    <color name="colorBackground">#F0F0F0</color>
+    <color name="colorBackgroundAlt">#E0E0E0</color>
 </resources>
