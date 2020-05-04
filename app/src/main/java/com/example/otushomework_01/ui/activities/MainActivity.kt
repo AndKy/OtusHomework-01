@@ -117,25 +117,29 @@ class MainActivity
     }
 
     override fun onBackPressed() {
-        val dialog : Dialog = object : Dialog(this) {
+        if (supportFragmentManager.backStackEntryCount == 0) {
+            val dialog: Dialog = object : Dialog(this) {
 
-            override fun onCreate(savedInstanceState: Bundle?) {
-                super.onCreate(savedInstanceState)
-                setContentView(R.layout.dialog_close)
+                override fun onCreate(savedInstanceState: Bundle?) {
+                    super.onCreate(savedInstanceState)
+                    setContentView(R.layout.dialog_close)
 
-                val btnYes = findViewById<Button>(R.id.buttonYes)
-                val btnNo = findViewById<Button>(R.id.buttonNo)
+                    val btnYes = findViewById<Button>(R.id.buttonYes)
+                    val btnNo = findViewById<Button>(R.id.buttonNo)
 
-                btnYes.setOnClickListener() {
-                    finish()
-                }
+                    btnYes.setOnClickListener() {
+                        finish()
+                    }
 
-                btnNo.setOnClickListener() {
-                    dismiss()
+                    btnNo.setOnClickListener() {
+                        dismiss()
+                    }
                 }
             }
+            dialog.show()
+        } else {
+            super.onBackPressed()
         }
-        dialog.show()
     }
 
     private fun openDetailsWindow(movieItem: MovieItem) {
