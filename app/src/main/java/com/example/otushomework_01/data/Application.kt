@@ -1,4 +1,4 @@
-package com.example.otushomework_01
+package com.example.otushomework_01.data
 
 object Application {
 
@@ -16,8 +16,10 @@ object Application {
     private var selectedMovie: MovieItem? = null
     private val listeners = ArrayList<Listener>()
 
-    fun getMovies(): List<MovieItem> = movies
-    fun getFavMovies(): List<MovieItem> = favorites
+    fun getMovies(): List<MovieItem> =
+        movies
+    fun getFavMovies(): List<MovieItem> =
+        favorites
     fun addListener(listener: Listener) = listeners.add(listener)
     fun clearListeners() = listeners.clear()
 
@@ -43,7 +45,8 @@ object Application {
     }
 
     fun addNewMovie() {
-        val movie = Hollywood.makeNewMovie(movies)
+        val movie =
+            Hollywood.makeNewMovie(movies)
         addMovie(movie)
     }
 

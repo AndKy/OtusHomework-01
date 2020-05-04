@@ -1,7 +1,9 @@
-package com.example.otushomework_01
+package com.example.otushomework_01.ui.viewholders
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.example.otushomework_01.data.MovieItem
+import com.example.otushomework_01.R
 import kotlinx.android.synthetic.main.item_favorite_movie.view.*
 
 class FavoriteItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

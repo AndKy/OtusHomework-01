@@ -1,4 +1,7 @@
-package com.example.otushomework_01
+package com.example.otushomework_01.data
+
+import com.example.otushomework_01.ui.fragments.FavoritesFragmentEventHandler
+import com.example.otushomework_01.ui.fragments.MovieListFragmentEventHandler
 
 object ApplicationUtils {
     fun makeListenerFor(h: MovieListFragmentEventHandler) : Application.Listener {

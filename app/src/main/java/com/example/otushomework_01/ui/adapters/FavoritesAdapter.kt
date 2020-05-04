@@ -1,8 +1,11 @@
-package com.example.otushomework_01
+package com.example.otushomework_01.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.otushomework_01.R
+import com.example.otushomework_01.data.MovieItem
+import com.example.otushomework_01.ui.viewholders.FavoriteItemViewHolder
 
 class FavoritesAdapter(
     private val inflater: LayoutInflater,
@@ -16,7 +19,9 @@ class FavoritesAdapter(
     var listener: Listener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return FavoriteItemViewHolder(inflater.inflate(R.layout.item_favorite_movie, parent, false))
+        return FavoriteItemViewHolder(
+            inflater.inflate(R.layout.item_favorite_movie, parent, false)
+        )
     }
 
     override fun getItemCount() = items.size

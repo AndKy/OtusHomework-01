@@ -1,8 +1,10 @@
-package com.example.otushomework_01
+package com.example.otushomework_01.ui.viewholders
 
 import android.content.res.Configuration
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.example.otushomework_01.R
+import com.example.otushomework_01.data.MovieItem
 import kotlinx.android.synthetic.main.item_movie.view.*
 
 class MovieItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

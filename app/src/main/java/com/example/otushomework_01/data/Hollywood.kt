@@ -1,5 +1,6 @@
-package com.example.otushomework_01
+package com.example.otushomework_01.data
 
+import com.example.otushomework_01.R
 import kotlin.random.Random
 
 // Hollywood - random movie generator
@@ -617,7 +618,13 @@ object Hollywood {
     fun makeMovie() : MovieItem {
         val i = logos.indices.random()
         val details = randDetails()
-        return MovieItem(logos[i], logos[i], randTitle(i), details, details)
+        return MovieItem(
+            logos[i],
+            logos[i],
+            randTitle(i),
+            details,
+            details
+        )
     }
 
     fun makeNewMovie(movies: List<MovieItem>) : MovieItem {
@@ -646,12 +653,21 @@ object Hollywood {
     private fun randDetails() : String {
         return "%d, %s\n%s\n%d ч %d мин\nРежиссер: %s\nВ главных ролях: %s".format(
             1990 + Random.nextInt(30),
-            pickFrom(countries, Random.nextInt(1,3)),
-            pickFrom(genre, if (Random.nextInt(10) > 2) 2 else 1),
+            pickFrom(
+                countries,
+                Random.nextInt(1, 3)
+            ),
+            pickFrom(
+                genre,
+                if (Random.nextInt(10) > 2) 2 else 1
+            ),
             Random.nextInt(1,2),
             Random.nextInt(0,60),
             producer.random(),
-            pickFrom(actors, Random.nextInt(2,5))
+            pickFrom(
+                actors,
+                Random.nextInt(2, 5)
+            )
         )
     }
 

@@ -1,16 +1,21 @@
-package com.example.otushomework_01
+package com.example.otushomework_01.ui
 
 import android.content.Context
 import android.graphics.*
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.otushomework_01.R
+import com.example.otushomework_01.ui.viewholders.ButtonsItemViewHolder
+import com.example.otushomework_01.ui.viewholders.MovieItemViewHolder
 import kotlin.math.abs
 
 abstract class MoviesSwipeToDelete(context: Context?)
     : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
-    private val icon = ContextCompat.getDrawable(context!!, R.drawable.ic_delete_forever_black_24dp)!!
+    private val icon = ContextCompat.getDrawable(context!!,
+        R.drawable.ic_delete_forever_black_24dp
+    )!!
 
     override fun onMove(
         recyclerView: RecyclerView,

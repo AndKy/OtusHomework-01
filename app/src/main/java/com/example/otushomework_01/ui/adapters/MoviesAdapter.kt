@@ -1,9 +1,13 @@
-package com.example.otushomework_01
+package com.example.otushomework_01.ui.adapters
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.otushomework_01.R
+import com.example.otushomework_01.data.MovieItem
+import com.example.otushomework_01.ui.viewholders.ButtonsItemViewHolder
+import com.example.otushomework_01.ui.viewholders.MovieItemViewHolder
 import kotlinx.android.synthetic.main.item_button.view.*
 import kotlinx.android.synthetic.main.item_movie.view.*
 
@@ -30,9 +34,13 @@ class MoviesAdapter(
         log("onCreateViewHolder $viewType")
 
         return if (viewType == VIEW_TYPE_MOVIE)
-            MovieItemViewHolder(inflater.inflate(R.layout.item_movie, parent, false))
+            MovieItemViewHolder(
+                inflater.inflate(R.layout.item_movie, parent, false)
+            )
         else
-            ButtonsItemViewHolder(inflater.inflate(R.layout.item_button, parent, false))
+            ButtonsItemViewHolder(
+                inflater.inflate(R.layout.item_button, parent, false)
+            )
     }
 
     override fun getItemCount() = items.size + 1 // +1 button

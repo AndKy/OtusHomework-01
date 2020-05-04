@@ -10,14 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".DetailsActivity"
-            android:parentActivityName=".MainActivity">
+            android:name=".ui.activities.DetailsActivity"
+            android:parentActivityName=".ui.activities.MainActivity">
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".ui.activities.MainActivity" />
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

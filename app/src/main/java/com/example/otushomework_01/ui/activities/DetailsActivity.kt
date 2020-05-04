@@ -1,4 +1,4 @@
-package com.example.otushomework_01
+package com.example.otushomework_01.ui.activities
 
 import android.app.Activity
 import android.content.Intent
@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
-import com.example.otushomework_01.MainActivity.Companion.STATE_SELECTED_MOVIE
+import com.example.otushomework_01.data.MovieItem
+import com.example.otushomework_01.R
+import com.example.otushomework_01.ui.activities.MainActivity.Companion.STATE_SELECTED_MOVIE
 
 class DetailsActivity : AppCompatActivity() {
 

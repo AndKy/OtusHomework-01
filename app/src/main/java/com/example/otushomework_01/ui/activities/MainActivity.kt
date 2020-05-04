@@ -1,4 +1,4 @@
-package com.example.otushomework_01
+package com.example.otushomework_01.ui.activities
 
 import android.app.Activity
 import android.app.Dialog
@@ -11,6 +11,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.FragmentPagerAdapter
+import com.example.otushomework_01.*
+import com.example.otushomework_01.data.Application
+import com.example.otushomework_01.data.ApplicationUtils
+import com.example.otushomework_01.data.MovieItem
+import com.example.otushomework_01.ui.adapters.MovieListFragmentPagerAdapter
+import com.example.otushomework_01.ui.fragments.FavoritesFragment
+import com.example.otushomework_01.ui.fragments.MovieListFragment
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -44,7 +51,8 @@ class MainActivity
         fragment.movies = Application.getMovies()
 
         // subscribe
-        fragment.listener = object : MovieListFragment.Listener {
+        fragment.listener = object :
+            MovieListFragment.Listener {
             override fun onMovieSwipeDelete(movieItem: MovieItem) {
                 Application.removeMovie(movieItem)
             }
@@ -84,7 +92,8 @@ class MainActivity
         fragment.movies = Application.getFavMovies()
 
         // subscribe
-        fragment.listener = object : FavoritesFragment.Listener {
+        fragment.listener = object :
+            FavoritesFragment.Listener {
             override fun onFavMovieClick(movieItem: MovieItem) {
                 Application.setSelectedMovie(movieItem)
                 viewpager.setCurrentItem(PAGE_MOVIES, true)
@@ -143,14 +152,17 @@ class MainActivity
             putExtra(STATE_SELECTED_MOVIE, movieItem)
         }
 
-        startActivityForResult(intent, OUR_REQUEST_CODE)
+        startActivityForResult(intent,
+            OUR_REQUEST_CODE
+        )
     }
 
     private fun initPager() {
-        val adapter =  MovieListFragmentPagerAdapter(
-            supportFragmentManager,
-            FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
-        )
+        val adapter =
+            MovieListFragmentPagerAdapter(
+                supportFragmentManager,
+                FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+            )
         viewpager.adapter = adapter
 
         // link together pager and tabs
@@ -167,9 +179,27 @@ class MainActivity
     private fun initMovieList() {
         if (Application.getMovies().isEmpty()) {
             arrayOf(
-                MovieItem(R.drawable.movie_1_little, R.drawable.movie_1_big, getString(R.string.movie_1_title), getString(R.string.movie_1_desc), getString(R.string.movie_1_about)),
-                MovieItem(R.drawable.movie_2_little, R.drawable.movie_2_big, getString(R.string.movie_2_title), getString(R.string.movie_2_desc), getString(R.string.movie_2_about)),
-                MovieItem(R.drawable.movie_3_little, R.drawable.movie_3_big, getString(R.string.movie_3_title), getString(R.string.movie_3_desc), getString(R.string.movie_3_about))
+                MovieItem(
+                    R.drawable.movie_1_little,
+                    R.drawable.movie_1_big,
+                    getString(R.string.movie_1_title),
+                    getString(R.string.movie_1_desc),
+                    getString(R.string.movie_1_about)
+                ),
+                MovieItem(
+                    R.drawable.movie_2_little,
+                    R.drawable.movie_2_big,
+                    getString(R.string.movie_2_title),
+                    getString(R.string.movie_2_desc),
+                    getString(R.string.movie_2_about)
+                ),
+                MovieItem(
+                    R.drawable.movie_3_little,
+                    R.drawable.movie_3_big,
+                    getString(R.string.movie_3_title),
+                    getString(R.string.movie_3_desc),
+                    getString(R.string.movie_3_about)
+                )
             ).forEach { Application.addMovie(it) }
 
             // Add number of random movies
