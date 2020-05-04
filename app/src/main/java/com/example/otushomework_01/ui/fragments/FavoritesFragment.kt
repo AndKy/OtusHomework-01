@@ -64,7 +64,7 @@ class FavoritesFragment
 
     override fun onMovieRemoved(movie: MovieItem, i: Int) {
         adapter.notifyItemRemoved(i)
-        adapter.notifyItemRangeChanged(i, adapter.itemCount - 1)
+        adapter.notifyItemRangeChanged(i, adapter.itemCount - i)
     }
 
     override fun onMovieChanged(movie: MovieItem) {

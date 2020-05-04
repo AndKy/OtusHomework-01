@@ -85,7 +85,7 @@ class MovieListFragment
 
     override fun onMovieRemoved(movie: MovieItem, i: Int) {
         adapter.notifyItemRemoved(i)
-        adapter.notifyItemRangeChanged(i, movies.size - 1)
+        adapter.notifyItemRangeChanged(i, movies.size - i)
     }
 
     override fun onMovieChanged(movie: MovieItem) {
