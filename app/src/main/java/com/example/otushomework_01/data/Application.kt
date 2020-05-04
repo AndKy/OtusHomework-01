@@ -21,7 +21,7 @@ object Application {
     fun getFavMovies(): List<MovieItem> =
         favorites
     fun addListener(listener: Listener) = listeners.add(listener)
-    fun clearListeners() = listeners.clear()
+    fun removeListener(listener: Listener) = listeners.remove(listener)
 
     fun addMovie(movie: MovieItem) {
         movies.add(movie)

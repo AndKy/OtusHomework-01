@@ -42,6 +42,8 @@ class MainActivity
     override fun onAttachFragment(fragment: androidx.fragment.app.Fragment) {
         super.onAttachFragment(fragment)
 
+        log("OnAttachFragment: $fragment")
+
         if (fragment is MovieListFragment) {
             attachFragment(fragment)
         }
@@ -54,6 +56,8 @@ class MainActivity
     }
 
     private fun attachFragment(fragment: MovieListFragment) {
+        val listener = ApplicationUtils.makeListenerFor(fragment)
+
         // set movies list
         fragment.movies = Application.getMovies()
 
@@ -88,13 +92,19 @@ class MainActivity
             override fun onAddMovieButtonClick() {
                 Application.addNewMovie()
             }
+
+            override fun onDestroy() {
+                Application.removeListener(listener)
+            }
         }
 
         // attach fragment to data model
-        Application.addListener(ApplicationUtils.makeListenerFor(fragment))
+        Application.addListener(listener)
     }
 
     private fun attachFragment(fragment: FavoritesFragment) {
+        val listener = ApplicationUtils.makeListenerFor(fragment)
+
         // set movies list
         fragment.movies = Application.getFavMovies()
 
@@ -105,15 +115,14 @@ class MainActivity
                 Application.setSelectedMovie(movieItem)
                 pagerFragment?.scrollToPage(PagerFragment.Pages.MOVIES)
             }
+
+            override fun onDestroy() {
+                Application.removeListener(listener)
+            }
         }
 
         // attach fragment to data model
-        Application.addListener(ApplicationUtils.makeListenerFor(fragment))
-    }
-
-    override fun onDestroy() {
-        Application.clearListeners()
-        super.onDestroy()
+        Application.addListener(listener)
     }
 
     override fun onBackPressed() {

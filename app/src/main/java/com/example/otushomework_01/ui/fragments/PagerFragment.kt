@@ -10,7 +10,6 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_pager.*
 
 class PagerFragment : Fragment(R.layout.fragment_pager) {
-
     enum class Pages {
         MOVIES,
         FAVORITES

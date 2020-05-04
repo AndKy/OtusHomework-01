@@ -1,14 +1,13 @@
 package com.example.otushomework_01.ui.fragments
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.otushomework_01.R
+import com.example.otushomework_01.data.Destroyable
 import com.example.otushomework_01.data.MovieItem
 import com.example.otushomework_01.ui.adapters.FavoritesAdapter
 import kotlinx.android.synthetic.main.fragment_favorites.*
@@ -24,7 +23,9 @@ class FavoritesFragment
     : Fragment(R.layout.fragment_favorites)
     , FavoritesFragmentEventHandler {
 
-    interface Listener : FavoritesAdapter.Listener
+    interface Listener
+        : FavoritesAdapter.Listener
+        , Destroyable
 
     var listener: Listener? = null
     var movies: List<MovieItem> = listOf()
@@ -37,6 +38,11 @@ class FavoritesFragment
 
         initRecycler()
         initClickListeners()
+    }
+
+    override fun onDestroy() {
+        listener?.onDestroy()
+        super.onDestroy()
     }
 
     private fun initRecycler() {

@@ -1,7 +1,12 @@
 package com.example.otushomework_01.data
 
+import androidx.fragment.app.Fragment
 import com.example.otushomework_01.ui.fragments.FavoritesFragmentEventHandler
 import com.example.otushomework_01.ui.fragments.MovieListFragmentEventHandler
+
+interface Destroyable {
+    fun onDestroy()
+}
 
 object ApplicationUtils {
     fun makeListenerFor(h: MovieListFragmentEventHandler) : Application.Listener {

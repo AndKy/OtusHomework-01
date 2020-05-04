@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.otushomework_01.ui.adapters.MoviesAdapter
 import com.example.otushomework_01.ui.MoviesSwipeToDelete
 import com.example.otushomework_01.R
+import com.example.otushomework_01.data.Destroyable
 import com.example.otushomework_01.data.MovieItem
 import com.example.otushomework_01.ui.viewholders.MovieItemViewHolder
 import kotlinx.android.synthetic.main.fragment_movie_list.*
@@ -27,7 +28,9 @@ class MovieListFragment
     : Fragment(R.layout.fragment_movie_list)
     , MovieListFragmentEventHandler {
 
-    interface Listener : MoviesAdapter.Listener {
+    interface Listener
+        : MoviesAdapter.Listener
+        , Destroyable {
         fun onMovieSwipeDelete(movieItem: MovieItem)
     }
 
@@ -42,6 +45,11 @@ class MovieListFragment
 
         initRecycler()
         initClickListeners()
+    }
+
+    override fun onDestroy() {
+        listener?.onDestroy()
+        super.onDestroy()
     }
 
     private fun initRecycler() {
