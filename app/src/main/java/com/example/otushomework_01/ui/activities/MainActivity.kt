@@ -1,6 +1,5 @@
 package com.example.otushomework_01.ui.activities
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.content.res.Configuration
@@ -10,19 +9,20 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.fragment.app.FragmentPagerAdapter
-import com.example.otushomework_01.*
+import com.example.otushomework_01.R
 import com.example.otushomework_01.data.Application
 import com.example.otushomework_01.data.ApplicationUtils
 import com.example.otushomework_01.data.MovieItem
-import com.example.otushomework_01.ui.adapters.MovieListFragmentPagerAdapter
+import com.example.otushomework_01.ui.fragments.DetailsFragment
 import com.example.otushomework_01.ui.fragments.FavoritesFragment
 import com.example.otushomework_01.ui.fragments.MovieListFragment
-import com.google.android.material.tabs.TabLayout
+import com.example.otushomework_01.ui.fragments.PagerFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity
     : AppCompatActivity() {
+
+    private var pagerFragment: PagerFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // movies must be added before onCreate to avoid call fragment handlers when it not created yet
@@ -31,7 +31,11 @@ class MainActivity
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initPager()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.frame_container, PagerFragment())
+            .commit()
+
         initClickListeners()
     }
 
@@ -43,6 +47,9 @@ class MainActivity
         }
         else if (fragment is FavoritesFragment) {
             attachFragment(fragment)
+        }
+        else if (fragment is PagerFragment) {
+            pagerFragment = fragment
         }
     }
 
@@ -96,7 +103,7 @@ class MainActivity
             FavoritesFragment.Listener {
             override fun onFavMovieClick(movieItem: MovieItem) {
                 Application.setSelectedMovie(movieItem)
-                viewpager.setCurrentItem(PAGE_MOVIES, true)
+                pagerFragment?.scrollToPage(PagerFragment.Pages.MOVIES)
             }
         }
 
@@ -131,43 +138,41 @@ class MainActivity
         dialog.show()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    private fun openDetailsWindow(movieItem: MovieItem) {
 
-        if (requestCode == OUR_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                data?.let {
-                    val comment = it.getStringExtra(DetailsActivity.STATE_COMMENT)
-                    val like = it.getBooleanExtra(DetailsActivity.STATE_LIKE, false)
+        val detailsFragment = DetailsFragment().apply {
+            movie = movieItem
+            listener = object : DetailsFragment.Listener {
+                override fun onInviteButtonClicked(movie: MovieItem) {
+                    val inviteMsg = getString(R.string.invite_msg).format(movie.textTitle)
+                    val sendIntent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, inviteMsg)
+                    }
 
-                    log("onActivityResult: comment='%s'".format(comment))
-                    log("onActivityResult: like='%b'".format(like))
+                    sendIntent.resolveActivity(packageManager)?.let {
+                        startActivity(sendIntent)
+                    }
+                }
+
+                override fun onReturnCommentClicked(movie: MovieItem, result: Bundle) {
+                    result.let {
+                        val comment = it.getString(DetailsFragment.STATE_COMMENT)
+                        val like = it.getBoolean(DetailsFragment.STATE_LIKE, false)
+
+                        log("onReturnCommentClicked: comment='%s'".format(comment))
+                        log("onReturnCommentClicked: like='%b'".format(like))
+                    }
                 }
             }
         }
-    }
 
-    private fun openDetailsWindow(movieItem: MovieItem) {
-        val intent = Intent(this, DetailsActivity::class.java).apply {
-            putExtra(STATE_SELECTED_MOVIE, movieItem)
-        }
-
-        startActivityForResult(intent,
-            OUR_REQUEST_CODE
-        )
-    }
-
-    private fun initPager() {
-        val adapter =
-            MovieListFragmentPagerAdapter(
-                supportFragmentManager,
-                FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
-            )
-        viewpager.adapter = adapter
-
-        // link together pager and tabs
-        viewpager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
-        tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(viewpager))
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.frame_container, detailsFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun initClickListeners() {
@@ -226,12 +231,5 @@ class MainActivity
     private fun isNightMode() : Boolean {
         val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         return currentNightMode == Configuration.UI_MODE_NIGHT_YES
-    }
-
-    companion object {
-        const val STATE_SELECTED_MOVIE = "selected-movie"
-        const val OUR_REQUEST_CODE = 1
-        const val PAGE_MOVIES = 0
-        const val PAGE_FAVORITES = 1
     }
 }
