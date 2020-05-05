@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.otushomework_01.R
 import com.example.otushomework_01.data.Application
-import com.example.otushomework_01.data.ApplicationUtils
+import com.example.otushomework_01.data.Utils
 import com.example.otushomework_01.data.MovieItem
 import com.example.otushomework_01.ui.fragments.DetailsFragment
 import com.example.otushomework_01.ui.fragments.FavoritesFragment
@@ -56,7 +56,7 @@ class MainActivity
     }
 
     private fun attachFragment(fragment: MovieListFragment) {
-        val listener = ApplicationUtils.makeListenerFor(fragment)
+        val listener = Utils.makeListenerFor(fragment)
 
         // set movies list
         fragment.movies = Application.getMovies()
@@ -103,7 +103,7 @@ class MainActivity
     }
 
     private fun attachFragment(fragment: FavoritesFragment) {
-        val listener = ApplicationUtils.makeListenerFor(fragment)
+        val listener = Utils.makeListenerFor(fragment)
 
         // set movies list
         fragment.movies = Application.getFavMovies()

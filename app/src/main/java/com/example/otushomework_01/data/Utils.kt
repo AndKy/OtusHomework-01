@@ -8,7 +8,7 @@ interface Destroyable {
     fun onDestroy()
 }
 
-object ApplicationUtils {
+object Utils {
     fun makeListenerFor(h: MovieListFragmentEventHandler) : Application.Listener {
         return object : Application.Listener {
             override fun onMovieChanged(movie: MovieItem) {
