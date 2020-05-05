@@ -42,4 +42,8 @@ class PagerFragment : Fragment(R.layout.fragment_pager) {
     fun scrollToPage(page: Pages) {
         viewpager.setCurrentItem(page.ordinal, true)
     }
+
+    companion object {
+        const val TAG = "pager"
+    }
 }

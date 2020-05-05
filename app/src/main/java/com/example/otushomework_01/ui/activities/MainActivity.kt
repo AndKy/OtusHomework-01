@@ -31,9 +31,11 @@ class MainActivity
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val fragment = supportFragmentManager.findFragmentByTag(PagerFragment.TAG) ?: PagerFragment()
+
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.frame_container, PagerFragment())
+            .replace(R.id.frame_container, fragment, PagerFragment.TAG)
             .commit()
 
         initClickListeners()
@@ -183,7 +185,7 @@ class MainActivity
 
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.frame_container, detailsFragment)
+            .replace(R.id.frame_container, detailsFragment, DetailsFragment.TAG)
             .addToBackStack(null)
             .commit()
     }

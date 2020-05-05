@@ -66,6 +66,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     }
 
     companion object {
+        const val TAG = "details"
         const val STATE_LIKE = "like"
         const val STATE_COMMENT = "comment"
     }
