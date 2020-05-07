@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout
+<com.example.otushomework_01.ui.TorinDrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -45,6 +45,9 @@
         android:id="@+id/nav_view"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/drawer_menu"/>
-</androidx.drawerlayout.widget.DrawerLayout>
+        app:menu="@menu/drawer_menu"
+        app:itemTextColor="@drawable/drawer_item_color"
+        app:itemIconTint="@drawable/drawer_item_color"
+        />
+</com.example.otushomework_01.ui.TorinDrawerLayout>
 
