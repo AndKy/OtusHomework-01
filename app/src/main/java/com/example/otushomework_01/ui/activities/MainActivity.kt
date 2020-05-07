@@ -39,6 +39,9 @@ class MainActivity
             .replace(R.id.frame_container, fragment, PagerFragment.TAG)
             .commit()
 
+        if (savedInstanceState == null)
+            nav_view.setCheckedItem(R.id.nav_movies)
+
         initClickListeners()
     }
 
@@ -54,7 +57,17 @@ class MainActivity
             attachFragment(fragment)
         }
         else if (fragment is PagerFragment) {
-            pagerFragment = fragment
+            attachFragment(fragment)
+        }
+    }
+
+    private fun attachFragment(fragment: PagerFragment) {
+        pagerFragment = fragment
+
+        fragment.listener = object : PagerFragment.Listener {
+            override fun onPageSelected(page: PagerFragment.Pages) {
+                nav_view.setCheckedItem(pageToMenuItemId(page))
+            }
         }
     }
 
@@ -197,6 +210,15 @@ class MainActivity
         buttonDayNight.setOnClickListener {
             setNightMode(!isNightMode())
         }
+
+        nav_view.setNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.nav_movies -> pagerFragment?.scrollToPage(PagerFragment.Pages.MOVIES)
+                R.id.nav_favorites -> pagerFragment?.scrollToPage(PagerFragment.Pages.FAVORITES)
+            }
+            drawer_layout.closeDrawer(GravityCompat.START)
+            true
+        }
     }
 
     private fun initMovieList() {
@@ -249,5 +271,14 @@ class MainActivity
     private fun isNightMode() : Boolean {
         val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         return currentNightMode == Configuration.UI_MODE_NIGHT_YES
+    }
+
+    companion object {
+        private fun pageToMenuItemId(page: PagerFragment.Pages) : Int {
+            return when(page) {
+                PagerFragment.Pages.MOVIES -> R.id.nav_movies
+                PagerFragment.Pages.FAVORITES -> R.id.nav_favorites
+            }
+        }
     }
 }
