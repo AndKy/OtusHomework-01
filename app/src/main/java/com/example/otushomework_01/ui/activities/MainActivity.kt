@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.GravityCompat
 import com.example.otushomework_01.R
 import com.example.otushomework_01.data.Application
 import com.example.otushomework_01.data.Utils
@@ -128,7 +129,9 @@ class MainActivity
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount == 0) {
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout.closeDrawer(GravityCompat.START)
+        } else if (supportFragmentManager.backStackEntryCount == 0) {
             val dialog: Dialog = object : Dialog(this) {
 
                 override fun onCreate(savedInstanceState: Bundle?) {
