@@ -9,7 +9,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.example.otushomework_01.R
 import com.google.android.material.navigation.NavigationView
 import kotlin.math.roundToInt
-import kotlin.math.sqrt
 
 class TorinDrawerLayout @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -22,6 +21,8 @@ class TorinDrawerLayout @JvmOverloads constructor(
     private val torinForeground = ContextCompat.getDrawable(context,
         R.drawable.torin_foreground
     )!!
+
+    private var startOffset = 0.0
 
     var drawer: NavigationView? = null
 
@@ -40,7 +41,12 @@ class TorinDrawerLayout @JvmOverloads constructor(
         val view = drawer
         val header = drawer?.getHeaderView(0)
 
-        if (canvas != null && view != null && header != null && view.right > 0) {
+        if (canvas != null && view != null && header != null) {
+
+            if (view.right <= 0) {
+                startOffset = 8 * Math.random() - 4
+                return
+            }
 
             val w = header.width
             val h = header.height
@@ -49,12 +55,12 @@ class TorinDrawerLayout @JvmOverloads constructor(
             val faceW = torinFace.intrinsicWidth * h / torinFace.intrinsicHeight
 
             val xFinish = w / 2
-            val xStart  = FACE_START_OFFSET * faceW
+            val xStart  = startOffset * faceW
 
             // relative slide position [0 - 1]
             val progress = view.right.toFloat() / w
 
-            val x = xStart + (xFinish - xStart) * sqrt(progress)
+            val x = xStart + (xFinish - xStart) * progress
             val faceLeft = (x - 0.5f*faceW).roundToInt()
             val faceRight = faceLeft + faceW
 
@@ -65,9 +71,5 @@ class TorinDrawerLayout @JvmOverloads constructor(
             torinForeground.setBounds(view.left, header.top, view.right, header.bottom)
             torinForeground.draw(canvas)
         }
-    }
-
-    companion object {
-        const val FACE_START_OFFSET = 0.5f
     }
 }
