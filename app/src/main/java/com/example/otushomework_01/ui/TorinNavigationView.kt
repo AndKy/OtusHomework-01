@@ -22,6 +22,10 @@ class TorinDrawerLayout @JvmOverloads constructor(
         R.drawable.torin_foreground
     )!!
 
+    private val torinBackground = ContextCompat.getDrawable(context,
+        R.drawable.torin_background
+    )!!
+
     private var startOffset = 0.0
 
     var drawer: NavigationView? = null
@@ -65,6 +69,10 @@ class TorinDrawerLayout @JvmOverloads constructor(
             val faceRight = faceLeft + faceW
 
             canvas.clipRect(view.left, header.top, view.right, header.bottom)
+
+            torinBackground.setBounds(view.left, header.top, view.right, header.bottom)
+            torinBackground.draw(canvas)
+
             torinFace.setBounds(faceLeft, header.top, faceRight, header.bottom)
             torinFace.draw(canvas)
 

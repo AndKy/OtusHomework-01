@@ -24,6 +24,9 @@
     <string name="add_movie">Добавить фильм</string>
     <string name="movie_added_to_favorite">Фильм \'%s\' добавлен в избранное!</string>
     <string name="movie_removed_from_favorites">Фильм \'%s\' удален из избранного!</string>
+    <string name="color_scheme">Цветовая схема</string>
+    <string name="selected_color_scheme">День</string>
+    <string name="navigation">Навигация</string>
 </resources>
 
 

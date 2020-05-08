@@ -14,4 +14,7 @@
     <string name="add_movie">Add movie</string>
     <string name="movie_added_to_favorite">Movie \'%s\' have been added to favorites!</string>
     <string name="movie_removed_from_favorites">Movie \'%s\' have been removed from favorites!</string>
+    <string name="color_scheme">Color scheme</string>
+    <string name="selected_color_scheme">Day</string>
+    <string name="navigation">Navigation</string>
 </resources>

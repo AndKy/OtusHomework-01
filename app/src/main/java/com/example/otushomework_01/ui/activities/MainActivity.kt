@@ -215,6 +215,7 @@ class MainActivity
             when(it.itemId) {
                 R.id.nav_movies -> pagerFragment?.scrollToPage(PagerFragment.Pages.MOVIES)
                 R.id.nav_favorites -> pagerFragment?.scrollToPage(PagerFragment.Pages.FAVORITES)
+                R.id.nav_day_night -> setNightMode(!isNightMode())
             }
             drawer_layout.closeDrawer(GravityCompat.START)
             true

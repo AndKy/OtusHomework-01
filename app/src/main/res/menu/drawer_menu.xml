@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_movies"
-            android:title="@string/movies"
-            android:icon="@drawable/ic_local_movies_black_24dp"/>
-        <item
-            android:id="@+id/nav_favorites"
-            android:title="@string/favorites"
-            android:icon="@drawable/ic_heart_full"/>
-    </group>
+    <item android:title="@string/navigation">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_movies"
+                    android:title="@string/movies"
+                    android:icon="@drawable/ic_local_movies_black_24dp"/>
+                <item
+                    android:id="@+id/nav_favorites"
+                    android:title="@string/favorites"
+                    android:icon="@drawable/ic_heart_full"/>
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="@string/color_scheme">
+        <menu>
+            <item
+                android:title="@string/selected_color_scheme"
+                android:id="@+id/nav_day_night"
+                android:icon="@drawable/ic_day_night_48dp"/>
+        </menu>
+    </item>
 </menu>
