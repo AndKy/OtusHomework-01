@@ -27,6 +27,7 @@
     <string name="color_scheme">Цветовая схема</string>
     <string name="selected_color_scheme">День</string>
     <string name="navigation">Навигация</string>
+    <string name="cancel">Отмена</string>
 </resources>
 
 

@@ -6,19 +6,20 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import com.example.otushomework_01.R
 import com.example.otushomework_01.data.Application
-import com.example.otushomework_01.data.Utils
 import com.example.otushomework_01.data.MovieItem
+import com.example.otushomework_01.data.Utils
 import com.example.otushomework_01.ui.fragments.DetailsFragment
 import com.example.otushomework_01.ui.fragments.FavoritesFragment
 import com.example.otushomework_01.ui.fragments.MovieListFragment
 import com.example.otushomework_01.ui.fragments.PagerFragment
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_pager.*
 
 class MainActivity
     : AppCompatActivity() {
@@ -98,7 +99,11 @@ class MainActivity
                     else
                         getString(R.string.movie_removed_from_favorites).format(movieItem.textTitle.replace("\n", " "))
 
-                Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
+                Snackbar.make(viewpager, msg, Snackbar.LENGTH_LONG)
+                    .setAction(getString(R.string.cancel)) {
+                        onMovieFavButtonClick(movieItem)
+                    }
+                    .show()
             }
 
             override fun onMovieDetailsButtonClick(movieItem: MovieItem) {

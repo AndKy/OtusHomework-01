@@ -17,4 +17,5 @@
     <string name="color_scheme">Color scheme</string>
     <string name="selected_color_scheme">Day</string>
     <string name="navigation">Navigation</string>
+    <string name="cancel">Cancel</string>
 </resources>
