@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.otushomework_01.R
 import com.example.otushomework_01.data.MovieItem
+import com.example.otushomework_01.ui.activities.MainActivity
 import kotlinx.android.synthetic.main.fragment_details.*
 
 class DetailsFragment : Fragment(R.layout.fragment_details) {
@@ -21,10 +22,11 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        textViewTitle.text = movie.textTitle
+        (activity as MainActivity).setSupportActionBar(toolbar)
+
+        toolbar.title = movie.textTitle
         textViewAbout.text = movie.textAbout
         imageView.setImageResource(movie.idImgScreenshot)
-
         initClickListeners()
 
         savedInstanceState?.let {
