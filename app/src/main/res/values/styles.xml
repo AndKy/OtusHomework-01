@@ -67,6 +67,7 @@
         <item name="android:shadowDy">8</item>
         <item name="android:shadowDx">8</item>
         <item name="android:shadowRadius">8</item>
-        <item name="android:shadowColor">@color/colorBackground</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:shadowColor">#000</item>
     </style>
 </resources>
