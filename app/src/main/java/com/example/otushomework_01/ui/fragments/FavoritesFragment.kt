@@ -1,4 +1,4 @@
-package com.example.otushomework_01
+package com.example.otushomework_01.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,10 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.otushomework_01.R
+import com.example.otushomework_01.data.Destroyable
+import com.example.otushomework_01.data.MovieItem
+import com.example.otushomework_01.ui.adapters.FavoritesAdapter
 import kotlinx.android.synthetic.main.fragment_favorites.*
 
 interface FavoritesFragmentEventHandler {
@@ -19,7 +23,9 @@ class FavoritesFragment
     : Fragment(R.layout.fragment_favorites)
     , FavoritesFragmentEventHandler {
 
-    interface Listener : FavoritesAdapter.Listener
+    interface Listener
+        : FavoritesAdapter.Listener
+        , Destroyable
 
     var listener: Listener? = null
     var movies: List<MovieItem> = listOf()
@@ -34,10 +40,19 @@ class FavoritesFragment
         initClickListeners()
     }
 
+    override fun onDestroy() {
+        listener?.onDestroy()
+        super.onDestroy()
+    }
+
     private fun initRecycler() {
 
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        val moviesAdapter = FavoritesAdapter(LayoutInflater.from(context), movies)
+        val moviesAdapter =
+            FavoritesAdapter(
+                LayoutInflater.from(context),
+                movies
+            )
 
         recyclerFav.layoutManager = layoutManager
         recyclerFav.adapter = moviesAdapter
@@ -57,7 +72,7 @@ class FavoritesFragment
 
     override fun onMovieRemoved(movie: MovieItem, i: Int) {
         adapter.notifyItemRemoved(i)
-        adapter.notifyItemRangeChanged(i, adapter.itemCount - 1)
+        adapter.notifyItemRangeChanged(i, adapter.itemCount - i)
     }
 
     override fun onMovieChanged(movie: MovieItem) {

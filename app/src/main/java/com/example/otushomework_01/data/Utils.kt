@@ -1,6 +1,13 @@
-package com.example.otushomework_01
+package com.example.otushomework_01.data
 
-object ApplicationUtils {
+import com.example.otushomework_01.ui.fragments.FavoritesFragmentEventHandler
+import com.example.otushomework_01.ui.fragments.MovieListFragmentEventHandler
+
+interface Destroyable {
+    fun onDestroy()
+}
+
+object Utils {
     fun makeListenerFor(h: MovieListFragmentEventHandler) : Application.Listener {
         return object : Application.Listener {
             override fun onMovieChanged(movie: MovieItem) {

@@ -1,4 +1,4 @@
-package com.example.otushomework_01
+package com.example.otushomework_01.ui.fragments
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -9,6 +9,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.otushomework_01.ui.adapters.MoviesAdapter
+import com.example.otushomework_01.ui.MoviesSwipeToDelete
+import com.example.otushomework_01.R
+import com.example.otushomework_01.data.Destroyable
+import com.example.otushomework_01.data.MovieItem
+import com.example.otushomework_01.ui.viewholders.MovieItemViewHolder
 import kotlinx.android.synthetic.main.fragment_movie_list.*
 
 interface MovieListFragmentEventHandler {
@@ -22,7 +28,9 @@ class MovieListFragment
     : Fragment(R.layout.fragment_movie_list)
     , MovieListFragmentEventHandler {
 
-    interface Listener : MoviesAdapter.Listener {
+    interface Listener
+        : MoviesAdapter.Listener
+        , Destroyable {
         fun onMovieSwipeDelete(movieItem: MovieItem)
     }
 
@@ -39,6 +47,11 @@ class MovieListFragment
         initClickListeners()
     }
 
+    override fun onDestroy() {
+        listener?.onDestroy()
+        super.onDestroy()
+    }
+
     private fun initRecycler() {
         val twoColumns = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
@@ -49,7 +62,11 @@ class MovieListFragment
             else
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false).apply { stackFromEnd = true }
 
-        val moviesAdapter = MoviesAdapter(LayoutInflater.from(context), movies)
+        val moviesAdapter =
+            MoviesAdapter(
+                LayoutInflater.from(context),
+                movies
+            )
 
         recyclerMovies.layoutManager = layoutManager
         recyclerMovies.adapter = moviesAdapter
@@ -76,7 +93,7 @@ class MovieListFragment
 
     override fun onMovieRemoved(movie: MovieItem, i: Int) {
         adapter.notifyItemRemoved(i)
-        adapter.notifyItemRangeChanged(i, movies.size - 1)
+        adapter.notifyItemRangeChanged(i, movies.size - i)
     }
 
     override fun onMovieChanged(movie: MovieItem) {

@@ -1,8 +1,10 @@
-package com.example.otushomework_01
+package com.example.otushomework_01.ui.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.example.otushomework_01.ui.fragments.FavoritesFragment
+import com.example.otushomework_01.ui.fragments.MovieListFragment
 
 class MovieListFragmentPagerAdapter(
     fm: FragmentManager,
