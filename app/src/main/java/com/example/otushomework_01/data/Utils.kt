@@ -1,10 +1,27 @@
 package com.example.otushomework_01.data
 
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.example.otushomework_01.ui.fragments.FavoritesFragmentEventHandler
 import com.example.otushomework_01.ui.fragments.MovieListFragmentEventHandler
 
 interface Destroyable {
     fun onDestroy()
+}
+
+fun ImageView.assign(url: String) {
+    val drawableId = url.toIntOrNull()
+
+    if (drawableId != null) {
+        setImageResource(drawableId)
+    }
+    else {
+        Glide.with(this)
+            .load(url)
+            .transform(CenterCrop())
+            .into(this)
+    }
 }
 
 object Utils {

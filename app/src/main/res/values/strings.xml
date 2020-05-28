@@ -28,6 +28,7 @@
     <string name="selected_color_scheme">День</string>
     <string name="navigation">Навигация</string>
     <string name="cancel">Отмена</string>
+    <string name="load_error">Ошибка загрузки фильмов</string>
 </resources>
 
 

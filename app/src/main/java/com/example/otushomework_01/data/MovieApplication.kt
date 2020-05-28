@@ -2,7 +2,11 @@ package com.example.otushomework_01.data
 
 import android.app.Application
 import android.content.Context
+import android.widget.Toast
 import com.example.otushomework_01.R
+import com.example.otushomework_01.tmdtb.Movie
+import com.example.otushomework_01.tmdtb.MoviesRepository
+import com.google.android.material.snackbar.Snackbar
 
 class MovieApplication : Application() {
 
@@ -26,34 +30,20 @@ class MovieApplication : Application() {
     }
 
     private fun initMovieList() {
-        arrayOf(
-            MovieItem(
-                R.drawable.movie_1_little,
-                R.drawable.movie_1_big,
-                getString(R.string.movie_1_title),
-                getString(R.string.movie_1_desc),
-                getString(R.string.movie_1_about)
-            ),
-            MovieItem(
-                R.drawable.movie_2_little,
-                R.drawable.movie_2_big,
-                getString(R.string.movie_2_title),
-                getString(R.string.movie_2_desc),
-                getString(R.string.movie_2_about)
-            ),
-            MovieItem(
-                R.drawable.movie_3_little,
-                R.drawable.movie_3_big,
-                getString(R.string.movie_3_title),
-                getString(R.string.movie_3_desc),
-                getString(R.string.movie_3_about)
-            )
-        ).forEach { Application.addMovie(it) }
+        MoviesRepository.getPopularMovies(
+            callback = object : MoviesRepository.GetMoviesCallback {
+                override fun onSuccess(movies: List<Movie>) {
+                    for (movie in movies) {
+                        addMovie(Hollywood.convertMovieToItem(movie))
+                    }
+                }
 
-        // Add number of random movies
-        repeat(9) {
-            Application.addNewMovie()
-        }
+                override fun onError() {
+                    Toast
+                        .makeText(applicationContext, getString(R.string.load_error), Toast.LENGTH_LONG)
+                        .show()
+                }
+            })
     }
 
     fun getMovies(): List<MovieItem> =

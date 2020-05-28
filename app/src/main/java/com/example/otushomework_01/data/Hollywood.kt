@@ -1,6 +1,7 @@
 package com.example.otushomework_01.data
 
 import com.example.otushomework_01.R
+import com.example.otushomework_01.tmdtb.Movie
 import kotlin.random.Random
 
 // Hollywood - random movie generator
@@ -619,11 +620,21 @@ object Hollywood {
         val i = logos.indices.random()
         val details = randDetails()
         return MovieItem(
-            logos[i],
-            logos[i],
+            logos[i].toString(),
+            logos[i].toString(),
             randTitle(i),
             details,
             details
+        )
+    }
+
+    fun convertMovieToItem(movie: Movie) : MovieItem {
+        return MovieItem(
+            "https://image.tmdb.org/t/p/w342${movie.posterPath}",
+            "https://image.tmdb.org/t/p/w780${movie.backdropPath}",
+            movie.title,
+            randDetails(),
+            movie.overview
         )
     }
 

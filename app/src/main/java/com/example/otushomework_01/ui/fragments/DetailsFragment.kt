@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.otushomework_01.R
 import com.example.otushomework_01.data.MovieItem
+import com.example.otushomework_01.data.assign
 import com.example.otushomework_01.ui.activities.MainActivity
 import kotlinx.android.synthetic.main.fragment_details.*
 
@@ -26,7 +27,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
 
         toolbar.title = movie.textTitle
         textViewAbout.text = movie.textAbout
-        imageView.setImageResource(movie.idImgScreenshot)
+        imageView.assign(movie.urlImgScreenshot)
         initClickListeners()
 
         savedInstanceState?.let {
