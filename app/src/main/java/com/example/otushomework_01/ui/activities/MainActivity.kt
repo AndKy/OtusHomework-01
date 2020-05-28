@@ -29,9 +29,6 @@ class MainActivity
     private var pagerFragment: PagerFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // movies must be added before onCreate to avoid call fragment handlers when it not created yet
-        initMovieList()
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -226,39 +223,6 @@ class MainActivity
             }
             drawer_layout.closeDrawer(GravityCompat.START)
             true
-        }
-    }
-
-    private fun initMovieList() {
-        if (Application.getMovies().isEmpty()) {
-            arrayOf(
-                MovieItem(
-                    R.drawable.movie_1_little,
-                    R.drawable.movie_1_big,
-                    getString(R.string.movie_1_title),
-                    getString(R.string.movie_1_desc),
-                    getString(R.string.movie_1_about)
-                ),
-                MovieItem(
-                    R.drawable.movie_2_little,
-                    R.drawable.movie_2_big,
-                    getString(R.string.movie_2_title),
-                    getString(R.string.movie_2_desc),
-                    getString(R.string.movie_2_about)
-                ),
-                MovieItem(
-                    R.drawable.movie_3_little,
-                    R.drawable.movie_3_big,
-                    getString(R.string.movie_3_title),
-                    getString(R.string.movie_3_desc),
-                    getString(R.string.movie_3_about)
-                )
-            ).forEach { Application.addMovie(it) }
-
-            // Add number of random movies
-            repeat(9) {
-                Application.addNewMovie()
-            }
         }
     }
 

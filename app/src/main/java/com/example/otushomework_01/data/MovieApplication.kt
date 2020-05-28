@@ -2,6 +2,7 @@ package com.example.otushomework_01.data
 
 import android.app.Application
 import android.content.Context
+import com.example.otushomework_01.R
 
 class MovieApplication : Application() {
 
@@ -21,8 +22,39 @@ class MovieApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        initMovieList()
     }
 
+    private fun initMovieList() {
+        arrayOf(
+            MovieItem(
+                R.drawable.movie_1_little,
+                R.drawable.movie_1_big,
+                getString(R.string.movie_1_title),
+                getString(R.string.movie_1_desc),
+                getString(R.string.movie_1_about)
+            ),
+            MovieItem(
+                R.drawable.movie_2_little,
+                R.drawable.movie_2_big,
+                getString(R.string.movie_2_title),
+                getString(R.string.movie_2_desc),
+                getString(R.string.movie_2_about)
+            ),
+            MovieItem(
+                R.drawable.movie_3_little,
+                R.drawable.movie_3_big,
+                getString(R.string.movie_3_title),
+                getString(R.string.movie_3_desc),
+                getString(R.string.movie_3_about)
+            )
+        ).forEach { Application.addMovie(it) }
+
+        // Add number of random movies
+        repeat(9) {
+            Application.addNewMovie()
+        }
+    }
 
     fun getMovies(): List<MovieItem> =
         movies
