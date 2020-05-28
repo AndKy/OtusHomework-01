@@ -84,6 +84,10 @@ class MainActivity
                 Application.removeMovie(movieItem)
             }
 
+            override fun onPagination() {
+                Application.uploadMovies()
+            }
+
             override fun onMovieClick(movieItem: MovieItem) {
                 Application.setSelectedMovie(movieItem)
             }

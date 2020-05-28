@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.AbsListView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -32,6 +33,7 @@ class MovieListFragment
         : MoviesAdapter.Listener
         , Destroyable {
         fun onMovieSwipeDelete(movieItem: MovieItem)
+        fun onPagination()
     }
 
     var listener: Listener? = null
@@ -81,6 +83,23 @@ class MovieListFragment
 
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(recyclerMovies)
+
+        recyclerMovies.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val mgr = recyclerView.layoutManager
+                val pos =
+                    if (mgr is GridLayoutManager)
+                        mgr.findLastVisibleItemPosition()
+                    else if(mgr is LinearLayoutManager)
+                        mgr.findLastCompletelyVisibleItemPosition()
+                    else
+                        0
+
+                if (layoutManager.itemCount - pos < PAGINATION_THRESHOLD) {
+                    listener?.onPagination()
+                }
+            }
+        })
     }
 
     private fun initClickListeners() {
@@ -107,4 +126,9 @@ class MovieListFragment
         if (i in movies.indices)
             recyclerMovies.smoothScrollToPosition(i)
     }
+
+    companion object {
+        const val PAGINATION_THRESHOLD = 10
+    }
+
 }

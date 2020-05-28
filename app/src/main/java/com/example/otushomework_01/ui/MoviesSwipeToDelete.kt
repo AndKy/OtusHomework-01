@@ -6,7 +6,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.otushomework_01.R
-import com.example.otushomework_01.ui.viewholders.ButtonsItemViewHolder
 import com.example.otushomework_01.ui.viewholders.MovieItemViewHolder
 import kotlin.math.abs
 
@@ -29,18 +28,15 @@ abstract class MoviesSwipeToDelete(context: Context?)
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
     ): Int {
-        // Dont allow slide button item
-        if (viewHolder is ButtonsItemViewHolder)
-            return 0
-
         // Dont allow slide not selected items
         if (viewHolder is MovieItemViewHolder) {
             val movie = viewHolder.movie
             if (movie != null)
                 if(!movie.isSelected)
                     return 0
+            return super.getMovementFlags(recyclerView, viewHolder)
         }
-        return super.getMovementFlags(recyclerView, viewHolder)
+        return 0
     }
 
     override fun onChildDraw(

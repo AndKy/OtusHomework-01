@@ -6,7 +6,6 @@ import android.widget.Toast
 import com.example.otushomework_01.R
 import com.example.otushomework_01.tmdtb.Movie
 import com.example.otushomework_01.tmdtb.MoviesRepository
-import com.google.android.material.snackbar.Snackbar
 
 class MovieApplication : Application() {
 
@@ -23,28 +22,40 @@ class MovieApplication : Application() {
     private val favorites = ArrayList<MovieItem>()
     private var selectedMovie: MovieItem? = null
     private val listeners = ArrayList<Listener>()
+    private var lastMoviePage = 0
+    private var uploading = false
 
     override fun onCreate() {
         super.onCreate()
-        initMovieList()
+
+        uploadMovies()
     }
 
-    private fun initMovieList() {
-        MoviesRepository.getPopularMovies(
-            callback = object : MoviesRepository.GetMoviesCallback {
-                override fun onSuccess(movies: List<Movie>) {
-                    for (movie in movies) {
-                        addMovie(Hollywood.convertMovieToItem(movie))
+    fun uploadMovies() {
+        if (!uploading) {
+            val page = lastMoviePage + 1
+            uploading = true
+            MoviesRepository.getPopularMovies(
+                page,
+                object : MoviesRepository.GetMoviesCallback {
+                    override fun onSuccess(movies: List<Movie>) {
+                        for (movie in movies) {
+                            addMovie(Hollywood.convertMovieToItem(movie))
+                        }
+                        lastMoviePage = page
+                        uploading = false
                     }
-                }
 
-                override fun onError() {
-                    Toast
-                        .makeText(applicationContext, getString(R.string.load_error), Toast.LENGTH_LONG)
-                        .show()
-                }
-            })
+                    override fun onError() {
+                        Toast
+                            .makeText(applicationContext, getString(R.string.load_error), Toast.LENGTH_LONG)
+                            .show()
+                        uploading = false
+                    }
+                })
+        }
     }
+
 
     fun getMovies(): List<MovieItem> =
         movies
