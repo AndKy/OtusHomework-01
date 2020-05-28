@@ -8,8 +8,8 @@ interface Destroyable {
 }
 
 object Utils {
-    fun makeListenerFor(h: MovieListFragmentEventHandler) : Application.Listener {
-        return object : Application.Listener {
+    fun makeListenerFor(h: MovieListFragmentEventHandler) : MovieApplication.Listener {
+        return object : MovieApplication.Listener {
             override fun onMovieChanged(movie: MovieItem) {
                 h.onMovieChanged(movie)
             }
@@ -34,8 +34,8 @@ object Utils {
         }
     }
 
-    fun makeListenerFor(h: FavoritesFragmentEventHandler) : Application.Listener {
-        return object : Application.Listener {
+    fun makeListenerFor(h: FavoritesFragmentEventHandler) : MovieApplication.Listener {
+        return object : MovieApplication.Listener {
             override fun onMovieChanged(movie: MovieItem) {
                 h.onMovieChanged(movie)
             }

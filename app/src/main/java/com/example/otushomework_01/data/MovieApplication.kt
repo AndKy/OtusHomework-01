@@ -1,6 +1,9 @@
 package com.example.otushomework_01.data
 
-object Application {
+import android.app.Application
+import android.content.Context
+
+class MovieApplication : Application() {
 
     interface Listener {
         fun onMovieChanged(movie: MovieItem)
@@ -15,6 +18,11 @@ object Application {
     private val favorites = ArrayList<MovieItem>()
     private var selectedMovie: MovieItem? = null
     private val listeners = ArrayList<Listener>()
+
+    override fun onCreate() {
+        super.onCreate()
+    }
+
 
     fun getMovies(): List<MovieItem> =
         movies
@@ -95,3 +103,6 @@ object Application {
         listeners.forEach { it.onMovieChanged(movie) }
     }
 }
+
+val Context.Application: MovieApplication
+    get() = applicationContext as MovieApplication

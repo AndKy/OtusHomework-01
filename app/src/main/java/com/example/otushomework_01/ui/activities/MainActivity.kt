@@ -1,6 +1,7 @@
 package com.example.otushomework_01.ui.activities
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -13,6 +14,7 @@ import com.example.otushomework_01.R
 import com.example.otushomework_01.data.Application
 import com.example.otushomework_01.data.MovieItem
 import com.example.otushomework_01.data.Utils
+import com.example.otushomework_01.tmdtb.MoviesRepository
 import com.example.otushomework_01.ui.fragments.DetailsFragment
 import com.example.otushomework_01.ui.fragments.FavoritesFragment
 import com.example.otushomework_01.ui.fragments.MovieListFragment
