@@ -3,6 +3,7 @@ package com.example.otushomework_01.data
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.example.otushomework_01.R
 import com.example.otushomework_01.ui.fragments.FavoritesFragmentEventHandler
 import com.example.otushomework_01.ui.fragments.MovieListFragmentEventHandler
 
@@ -20,6 +21,7 @@ fun ImageView.assign(url: String) {
         Glide.with(this)
             .load(url)
             .transform(CenterCrop())
+            .error(R.drawable.ic_visibility_off_black_24dp)
             .into(this)
     }
 }
