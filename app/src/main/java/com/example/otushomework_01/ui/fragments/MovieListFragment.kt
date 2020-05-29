@@ -62,7 +62,7 @@ class MovieListFragment
             if (twoColumns)
                 GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
             else
-                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false).apply { stackFromEnd = true }
+                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         val moviesAdapter =
             MoviesAdapter(
