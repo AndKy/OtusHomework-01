@@ -28,7 +28,7 @@ class TorinDrawerLayout @JvmOverloads constructor(
 
     private var startOffset = 0.0
 
-    var drawer: NavigationView? = null
+    private var drawer: NavigationView? = null
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

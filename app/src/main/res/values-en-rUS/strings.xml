@@ -18,4 +18,5 @@
     <string name="selected_color_scheme">Day</string>
     <string name="navigation">Navigation</string>
     <string name="cancel">Cancel</string>
+    <string name="load_error">Movies loading error</string>
 </resources>

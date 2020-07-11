@@ -3,8 +3,11 @@ package com.example.otushomework_01.ui.viewholders
 import android.content.res.Configuration
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.example.otushomework_01.R
 import com.example.otushomework_01.data.MovieItem
+import com.example.otushomework_01.data.assign
 import kotlinx.android.synthetic.main.item_movie.view.*
 
 class MovieItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -14,8 +17,7 @@ class MovieItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(item: MovieItem) {
         movie = item
 
-        // Implicit findViewById<>
-        itemView.imageLogo.setImageResource(item.idImgLogo)
+        itemView.imageLogo.assign(item.urlImgLogo)
         itemView.textViewDescription.text = item.textDescription
 
         val title = item.textTitle.split("\n")

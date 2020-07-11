@@ -1,6 +1,13 @@
 package com.example.otushomework_01.data
 
-object Application {
+import android.app.Application
+import android.content.Context
+import android.widget.Toast
+import com.example.otushomework_01.R
+import com.example.otushomework_01.tmdtb.Movie
+import com.example.otushomework_01.tmdtb.MoviesRepository
+
+class MovieApplication : Application() {
 
     interface Listener {
         fun onMovieChanged(movie: MovieItem)
@@ -15,6 +22,40 @@ object Application {
     private val favorites = ArrayList<MovieItem>()
     private var selectedMovie: MovieItem? = null
     private val listeners = ArrayList<Listener>()
+    private var lastMoviePage = 0
+    private var uploading = false
+
+    override fun onCreate() {
+        super.onCreate()
+
+        uploadMovies()
+    }
+
+    fun uploadMovies() {
+        if (!uploading) {
+            val page = lastMoviePage + 1
+            uploading = true
+            MoviesRepository.getPopularMovies(
+                page,
+                object : MoviesRepository.GetMoviesCallback {
+                    override fun onSuccess(movies: List<Movie>) {
+                        for (movie in movies) {
+                            addMovie(Hollywood.convertMovieToItem(movie))
+                        }
+                        lastMoviePage = page
+                        uploading = false
+                    }
+
+                    override fun onError() {
+                        Toast
+                            .makeText(applicationContext, getString(R.string.load_error), Toast.LENGTH_LONG)
+                            .show()
+                        uploading = false
+                    }
+                })
+        }
+    }
+
 
     fun getMovies(): List<MovieItem> =
         movies
@@ -95,3 +136,6 @@ object Application {
         listeners.forEach { it.onMovieChanged(movie) }
     }
 }
+
+val Context.Application: MovieApplication
+    get() = applicationContext as MovieApplication

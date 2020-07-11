@@ -2,9 +2,16 @@ package com.example.otushomework_01.ui.viewholders
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.example.otushomework_01.data.MovieItem
 import com.example.otushomework_01.R
+import com.example.otushomework_01.data.assign
 import kotlinx.android.synthetic.main.item_favorite_movie.view.*
+import kotlinx.android.synthetic.main.item_favorite_movie.view.imageLogo
+import kotlinx.android.synthetic.main.item_favorite_movie.view.textViewSubtitle
+import kotlinx.android.synthetic.main.item_favorite_movie.view.textViewTitle
+import kotlinx.android.synthetic.main.item_movie.view.*
 
 class FavoriteItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -14,7 +21,7 @@ class FavoriteItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     fun bind(item: MovieItem) {
         movie = item
 
-        itemView.imageLogo.setImageResource(item.idImgLogo)
+        itemView.imageLogo.assign(item.urlImgLogo)
 
         val title = item.textTitle.split("\n")
         if (title.size == 1) {

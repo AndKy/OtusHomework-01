@@ -1,5 +1,9 @@
 package com.example.otushomework_01.data
 
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.example.otushomework_01.R
 import com.example.otushomework_01.ui.fragments.FavoritesFragmentEventHandler
 import com.example.otushomework_01.ui.fragments.MovieListFragmentEventHandler
 
@@ -7,9 +11,24 @@ interface Destroyable {
     fun onDestroy()
 }
 
+fun ImageView.assign(url: String) {
+    val drawableId = url.toIntOrNull()
+
+    if (drawableId != null) {
+        setImageResource(drawableId)
+    }
+    else {
+        Glide.with(this)
+            .load(url)
+            .transform(CenterCrop())
+            .error(R.drawable.ic_visibility_off_black_24dp)
+            .into(this)
+    }
+}
+
 object Utils {
-    fun makeListenerFor(h: MovieListFragmentEventHandler) : Application.Listener {
-        return object : Application.Listener {
+    fun makeListenerFor(h: MovieListFragmentEventHandler) : MovieApplication.Listener {
+        return object : MovieApplication.Listener {
             override fun onMovieChanged(movie: MovieItem) {
                 h.onMovieChanged(movie)
             }
@@ -34,8 +53,8 @@ object Utils {
         }
     }
 
-    fun makeListenerFor(h: FavoritesFragmentEventHandler) : Application.Listener {
-        return object : Application.Listener {
+    fun makeListenerFor(h: FavoritesFragmentEventHandler) : MovieApplication.Listener {
+        return object : MovieApplication.Listener {
             override fun onMovieChanged(movie: MovieItem) {
                 h.onMovieChanged(movie)
             }

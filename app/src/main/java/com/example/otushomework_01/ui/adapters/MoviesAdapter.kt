@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.otushomework_01.R
 import com.example.otushomework_01.data.MovieItem
 import com.example.otushomework_01.ui.viewholders.ButtonsItemViewHolder
+import com.example.otushomework_01.ui.viewholders.LoadIndicatorViewHolder
 import com.example.otushomework_01.ui.viewholders.MovieItemViewHolder
 import kotlinx.android.synthetic.main.item_button.view.*
 import kotlinx.android.synthetic.main.item_movie.view.*
@@ -19,6 +20,7 @@ class MoviesAdapter(
     companion object {
         const val VIEW_TYPE_MOVIE = 0
         const val VIEW_TYPE_BUTTON = 1
+        const val VIEW_TYPE_INDICATOR = 2
     }
 
     interface Listener {
@@ -37,13 +39,17 @@ class MoviesAdapter(
             MovieItemViewHolder(
                 inflater.inflate(R.layout.item_movie, parent, false)
             )
-        else
+        else if(viewType == VIEW_TYPE_BUTTON)
             ButtonsItemViewHolder(
                 inflater.inflate(R.layout.item_button, parent, false)
             )
+        else
+            LoadIndicatorViewHolder(
+                inflater.inflate(R.layout.item_loading_indicator, parent, false)
+            )
     }
 
-    override fun getItemCount() = items.size + 1 // +1 button
+    override fun getItemCount() = items.size + 1 // +1 button or loading indicator
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         log("onBindViewHolder $position")
@@ -63,7 +69,7 @@ class MoviesAdapter(
     }
 
     override fun getItemViewType(position: Int) : Int {
-        return if (position < items.size) VIEW_TYPE_MOVIE else VIEW_TYPE_BUTTON
+        return if (position < items.size) VIEW_TYPE_MOVIE else VIEW_TYPE_INDICATOR
     }
 
     private fun log(msg: String) {
