@@ -1,7 +1,6 @@
 package com.example.otushomework_01.ui.activities
 
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -10,11 +9,15 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import com.example.otushomework_01.R
 import com.example.otushomework_01.data.Application
+import com.example.otushomework_01.data.MovieApplication
 import com.example.otushomework_01.data.MovieItem
 import com.example.otushomework_01.data.Utils
-import com.example.otushomework_01.tmdtb.MoviesRepository
 import com.example.otushomework_01.ui.fragments.DetailsFragment
 import com.example.otushomework_01.ui.fragments.FavoritesFragment
 import com.example.otushomework_01.ui.fragments.MovieListFragment
@@ -45,7 +48,7 @@ class MainActivity
         initClickListeners()
     }
 
-    override fun onAttachFragment(fragment: androidx.fragment.app.Fragment) {
+    override fun onAttachFragment(fragment: Fragment) {
         super.onAttachFragment(fragment)
 
         log("OnAttachFragment: $fragment")
@@ -116,14 +119,23 @@ class MainActivity
             override fun onAddMovieButtonClick() {
                 Application.addNewMovie()
             }
-
-            override fun onDestroy() {
-                Application.removeListener(listener)
-            }
         }
 
         // attach fragment to data model
+        addFragmentListener(fragment, listener)
+    }
+
+    private fun addFragmentListener(fragment: Fragment, listener: MovieApplication.Listener) {
+        // attach fragment listener to data model
         Application.addListener(listener)
+
+        // detach fragment listener from data model on destroy
+        fragment.lifecycle.addObserver(object : LifecycleObserver {
+            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+                fun onDestroy() {
+                    Application.removeListener(listener)
+                }
+        })
     }
 
     private fun attachFragment(fragment: FavoritesFragment) {
@@ -139,14 +151,10 @@ class MainActivity
                 Application.setSelectedMovie(movieItem)
                 pagerFragment?.scrollToPage(PagerFragment.Pages.MOVIES)
             }
-
-            override fun onDestroy() {
-                Application.removeListener(listener)
-            }
         }
 
         // attach fragment to data model
-        Application.addListener(listener)
+        addFragmentListener(fragment, listener)
     }
 
     override fun onBackPressed() {

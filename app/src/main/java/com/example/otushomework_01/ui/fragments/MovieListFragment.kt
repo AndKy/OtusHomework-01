@@ -30,8 +30,7 @@ class MovieListFragment
     , MovieListFragmentEventHandler {
 
     interface Listener
-        : MoviesAdapter.Listener
-        , Destroyable {
+        : MoviesAdapter.Listener {
         fun onMovieSwipeDelete(movieItem: MovieItem)
         fun onPagination()
     }
@@ -47,11 +46,6 @@ class MovieListFragment
 
         initRecycler()
         initClickListeners()
-    }
-
-    override fun onDestroy() {
-        listener?.onDestroy()
-        super.onDestroy()
     }
 
     private fun initRecycler() {

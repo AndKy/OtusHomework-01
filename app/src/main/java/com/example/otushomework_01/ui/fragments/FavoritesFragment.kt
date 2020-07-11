@@ -25,7 +25,6 @@ class FavoritesFragment
 
     interface Listener
         : FavoritesAdapter.Listener
-        , Destroyable
 
     var listener: Listener? = null
     var movies: List<MovieItem> = listOf()
@@ -38,11 +37,6 @@ class FavoritesFragment
 
         initRecycler()
         initClickListeners()
-    }
-
-    override fun onDestroy() {
-        listener?.onDestroy()
-        super.onDestroy()
     }
 
     private fun initRecycler() {
