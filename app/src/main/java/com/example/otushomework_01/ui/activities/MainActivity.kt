@@ -50,8 +50,10 @@ class MainActivity
     private fun initModel() {
         // Scroll to main movie list on select movie
         model.selectedMovie.observe(this, Observer<MovieItem> {
-            if (model.needScrollToMainPage)
+            if (model.needScrollToMainPage) {
+                model.needScrollToMainPage = false
                 pagerFragment?.scrollToPage(PagerFragment.Pages.MOVIES)
+            }
         })
 
         // Show snack bar when press like on movie

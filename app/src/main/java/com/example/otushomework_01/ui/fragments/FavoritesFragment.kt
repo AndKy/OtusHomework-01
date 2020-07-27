@@ -1,6 +1,7 @@
 package com.example.otushomework_01.ui.fragments
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -30,16 +31,18 @@ class FavoritesFragment
                 recyclerFav.scrollToPosition(i)
             }
         })
-
-        // update movies list adapter
-        model.favAdapter.observe(viewLifecycleOwner, Observer<FavoritesAdapter> {
-            recyclerFav.adapter = it
-        })
     }
 
     private fun initRecycler() {
 
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        val adapter = FavoritesAdapter(
+            LayoutInflater.from(context),
+            model.favMovies
+        )
+        model.onFavMoviesAdapterCreated(adapter)
+        recyclerFav.adapter = adapter
 
         recyclerFav.layoutManager = layoutManager
         recyclerFav.scrollToPosition(0)

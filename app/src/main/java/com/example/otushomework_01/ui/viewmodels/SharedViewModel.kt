@@ -1,6 +1,7 @@
 package com.example.otushomework_01.ui.viewmodels
 
 import android.app.Application
+import android.content.Context
 import android.view.LayoutInflater
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -19,19 +20,12 @@ class SharedViewModel(application: Application)
     private val _selectedMovie = MutableLiveData<MovieItem>()
     private val _likedMovie = MutableLiveData<MovieItem>()
     private val _detailsMovie = MutableLiveData<MovieItem>()
-    private val _favAdapter : FavoritesAdapter
-    private val _moviesAdapter : MoviesAdapter
+    private var _favAdapter : FavoritesAdapter? = null
+    private var _moviesAdapter : MoviesAdapter? = null
 
-    // auto-reset flag on read
+    // Scrolling flags used to avoid scrolling on view recreating
     var needScrollToMainPage : Boolean = false
-        get() {
-            return if (field) {
-                field = false
-                true
-            } else {
-                false
-            }
-        }
+    var needScrollToSelectedMovie : Boolean = false
 
     val movies : List<MovieItem>
         get() = _app.getMovies()
@@ -48,37 +42,25 @@ class SharedViewModel(application: Application)
     val detailsMovie : LiveData<MovieItem>
         get() = _detailsMovie
 
-    val favAdapter : LiveData<FavoritesAdapter>
-    val moviesAdapter : LiveData<MoviesAdapter>
-
     init {
         _app.addListener(this)
+   }
 
-        _favAdapter = FavoritesAdapter(
-            LayoutInflater.from(_app.applicationContext),
-            favMovies
-        )
+    fun onFavMoviesAdapterCreated(favAdapter : FavoritesAdapter) {
+        _favAdapter = favAdapter
 
-        _moviesAdapter = MoviesAdapter(
-            LayoutInflater.from(_app.applicationContext),
-            movies
-        )
-
-        initListeners()
-
-        favAdapter = MutableLiveData(_favAdapter)
-        moviesAdapter = MutableLiveData(_moviesAdapter)
-    }
-
-    private fun initListeners() {
-        _favAdapter.listener = object : FavoritesAdapter.Listener {
+        _favAdapter?.listener = object : FavoritesAdapter.Listener {
             override fun onFavMovieClick(movieItem: MovieItem) {
                 needScrollToMainPage = true
                 _app.setSelectedMovie(movieItem)
             }
         }
+    }
 
-        _moviesAdapter.listener = object : MoviesAdapter.Listener {
+    fun onMovieListAdapterCreated(moviesAdapter : MoviesAdapter) {
+        _moviesAdapter = moviesAdapter
+
+        _moviesAdapter?.listener = object : MoviesAdapter.Listener {
             override fun onMovieClick(movieItem: MovieItem) {
                 _app.setSelectedMovie(movieItem)
             }
@@ -114,7 +96,7 @@ class SharedViewModel(application: Application)
     }
 
     fun onLikeCancel(movie: MovieItem) {
-        _moviesAdapter.listener?.onMovieFavButtonClick(movie)
+        _moviesAdapter?.listener?.onMovieFavButtonClick(movie)
     }
 
     override fun onCleared() {
@@ -124,31 +106,37 @@ class SharedViewModel(application: Application)
 
     override fun onMovieChanged(movie: MovieItem) {
         favMovies.findItem(movie) { i ->
-            _favAdapter.notifyItemChanged(i)
+            _favAdapter?.notifyItemChanged(i)
         }
         movies.findItem(movie) { i ->
-            _favAdapter.notifyItemChanged(i)
+            _moviesAdapter?.notifyItemChanged(i)
         }
     }
 
     override fun onMovieAdded(movie: MovieItem, i: Int) {
-        _moviesAdapter.notifyItemInserted(i)
+        _moviesAdapter?.notifyItemInserted(i)
     }
 
     override fun onMovieRemoved(movie: MovieItem, i: Int) {
-        _moviesAdapter.notifyItemRemoved(i)
-        _moviesAdapter.notifyItemRangeChanged(i, _moviesAdapter.itemCount - i)    }
+        _moviesAdapter?.apply {
+            notifyItemRemoved(i)
+            notifyItemRangeChanged(i, itemCount - i)
+        }
+    }
 
     override fun onFavMovieAdded(movie: MovieItem, i: Int) {
-        _favAdapter.notifyItemInserted(i)
+        _favAdapter?.notifyItemInserted(i)
     }
 
     override fun onFavMovieRemoved(movie: MovieItem, i: Int) {
-        _favAdapter.notifyItemRemoved(i)
-        _favAdapter.notifyItemRangeChanged(i, _favAdapter.itemCount - i)
+        _favAdapter?.apply {
+            notifyItemRemoved(i)
+            notifyItemRangeChanged(i, itemCount - i)
+        }
     }
 
     override fun onMovieSelected(movie: MovieItem) {
+        needScrollToSelectedMovie = true
         _selectedMovie.value = movie
     }
 }

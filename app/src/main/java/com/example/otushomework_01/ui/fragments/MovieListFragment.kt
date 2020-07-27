@@ -2,6 +2,7 @@ package com.example.otushomework_01.ui.fragments
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -32,13 +33,11 @@ class MovieListFragment
         // scroll to selected movie
         model.selectedMovie.observe(viewLifecycleOwner, Observer<MovieItem> {
             model.movies.findItem(it) { i ->
-                recyclerMovies.smoothScrollToPosition(i)
+                if (model.needScrollToSelectedMovie) {
+                    model.needScrollToSelectedMovie = false
+                    recyclerMovies.smoothScrollToPosition(i)
+                }
             }
-        })
-
-        // update movies list adapter
-        model.moviesAdapter.observe(viewLifecycleOwner, Observer<MoviesAdapter> {
-            recyclerMovies.adapter = it
         })
     }
 
@@ -52,6 +51,14 @@ class MovieListFragment
             else
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
+        val adapter = MoviesAdapter(
+            LayoutInflater.from(context),
+            model.movies
+        )
+
+        model.onMovieListAdapterCreated(adapter)
+
+        recyclerMovies.adapter = adapter
         recyclerMovies.layoutManager = layoutManager
         recyclerMovies.scrollToPosition(0)
 
