@@ -6,12 +6,14 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.Observer
 import androidx.lifecycle.OnLifecycleEvent
 import com.example.otushomework_01.R
 import com.example.otushomework_01.data.Application
@@ -22,6 +24,7 @@ import com.example.otushomework_01.ui.fragments.DetailsFragment
 import com.example.otushomework_01.ui.fragments.FavoritesFragment
 import com.example.otushomework_01.ui.fragments.MovieListFragment
 import com.example.otushomework_01.ui.fragments.PagerFragment
+import com.example.otushomework_01.ui.viewmodels.SharedViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_pager.*
@@ -30,6 +33,8 @@ class MainActivity
     : AppCompatActivity() {
 
     private var pagerFragment: PagerFragment? = null
+    private val model: SharedViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +51,16 @@ class MainActivity
             nav_view.setCheckedItem(R.id.nav_movies)
 
         initClickListeners()
+        initModel()
+
+    }
+
+    private fun initModel() {
+        // Scroll to main movie list on select movie
+        model.selectedMovie.observe(this, Observer<MovieItem> {
+            if (model.needScrollToMainPage)
+                pagerFragment?.scrollToPage(PagerFragment.Pages.MOVIES)
+        })
     }
 
     override fun onAttachFragment(fragment: Fragment) {
@@ -54,9 +69,6 @@ class MainActivity
         log("OnAttachFragment: $fragment")
 
         if (fragment is MovieListFragment) {
-            attachFragment(fragment)
-        }
-        else if (fragment is FavoritesFragment) {
             attachFragment(fragment)
         }
         else if (fragment is PagerFragment) {
@@ -136,25 +148,6 @@ class MainActivity
                     Application.removeListener(listener)
                 }
         })
-    }
-
-    private fun attachFragment(fragment: FavoritesFragment) {
-        val listener = Utils.makeListenerFor(fragment)
-
-        // set movies list
-        fragment.movies = Application.getFavMovies()
-
-        // subscribe
-        fragment.listener = object :
-            FavoritesFragment.Listener {
-            override fun onFavMovieClick(movieItem: MovieItem) {
-                Application.setSelectedMovie(movieItem)
-                pagerFragment?.scrollToPage(PagerFragment.Pages.MOVIES)
-            }
-        }
-
-        // attach fragment to data model
-        addFragmentListener(fragment, listener)
     }
 
     override fun onBackPressed() {

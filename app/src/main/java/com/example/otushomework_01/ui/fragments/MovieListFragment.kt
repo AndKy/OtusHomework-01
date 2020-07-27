@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.AbsListView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.otushomework_01.ui.adapters.MoviesAdapter
 import com.example.otushomework_01.ui.MoviesSwipeToDelete
 import com.example.otushomework_01.R
-import com.example.otushomework_01.data.Destroyable
 import com.example.otushomework_01.data.MovieItem
 import com.example.otushomework_01.ui.viewholders.MovieItemViewHolder
 import kotlinx.android.synthetic.main.fragment_movie_list.*
