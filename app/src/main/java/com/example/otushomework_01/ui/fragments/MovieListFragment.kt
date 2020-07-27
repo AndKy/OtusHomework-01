@@ -2,9 +2,10 @@ package com.example.otushomework_01.ui.fragments
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,37 +14,32 @@ import com.example.otushomework_01.ui.adapters.MoviesAdapter
 import com.example.otushomework_01.ui.MoviesSwipeToDelete
 import com.example.otushomework_01.R
 import com.example.otushomework_01.data.MovieItem
+import com.example.otushomework_01.data.findItem
 import com.example.otushomework_01.ui.viewholders.MovieItemViewHolder
+import com.example.otushomework_01.ui.viewmodels.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_movie_list.*
 
-interface MovieListFragmentEventHandler {
-    fun onMovieAdded(movie: MovieItem, i: Int)
-    fun onMovieRemoved(movie: MovieItem, i: Int)
-    fun onMovieChanged(movie: MovieItem)
-    fun onMovieSelected(movie: MovieItem)
-}
-
 class MovieListFragment
-    : Fragment(R.layout.fragment_movie_list)
-    , MovieListFragmentEventHandler {
+    : Fragment(R.layout.fragment_movie_list) {
 
-    interface Listener
-        : MoviesAdapter.Listener {
-        fun onMovieSwipeDelete(movieItem: MovieItem)
-        fun onPagination()
-    }
-
-    var listener: Listener? = null
-    var movies: List<MovieItem> = listOf()
-
-    private val adapter: MoviesAdapter
-        get() = recyclerMovies.adapter as MoviesAdapter
+    private val model: SharedViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initRecycler()
-        initClickListeners()
+
+        // scroll to selected movie
+        model.selectedMovie.observe(viewLifecycleOwner, Observer<MovieItem> {
+            model.movies.findItem(it) { i ->
+                recyclerMovies.smoothScrollToPosition(i)
+            }
+        })
+
+        // update movies list adapter
+        model.moviesAdapter.observe(viewLifecycleOwner, Observer<MoviesAdapter> {
+            recyclerMovies.adapter = it
+        })
     }
 
     private fun initRecycler() {
@@ -56,20 +52,13 @@ class MovieListFragment
             else
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        val moviesAdapter =
-            MoviesAdapter(
-                LayoutInflater.from(context),
-                movies
-            )
-
         recyclerMovies.layoutManager = layoutManager
-        recyclerMovies.adapter = moviesAdapter
         recyclerMovies.scrollToPosition(0)
 
         val swipeHandler = object : MoviesSwipeToDelete(context) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 if (viewHolder is MovieItemViewHolder)
-                    listener?.onMovieSwipeDelete(viewHolder.movie!!)
+                    model.onMovieSwipeToDelete(viewHolder.movie!!)
             }
         }
 
@@ -88,35 +77,10 @@ class MovieListFragment
                         0
 
                 if (layoutManager.itemCount - pos < PAGINATION_THRESHOLD) {
-                    listener?.onPagination()
+                    model.onMoviesListScrolledToEnd()
                 }
             }
         })
-    }
-
-    private fun initClickListeners() {
-        adapter.listener = listener
-    }
-
-    override fun onMovieAdded(movie: MovieItem, i: Int) {
-        adapter.notifyItemInserted(i)
-    }
-
-    override fun onMovieRemoved(movie: MovieItem, i: Int) {
-        adapter.notifyItemRemoved(i)
-        adapter.notifyItemRangeChanged(i, movies.size - i)
-    }
-
-    override fun onMovieChanged(movie: MovieItem) {
-        val i = movies.indexOfFirst { it === movie }
-        if (i in movies.indices)
-            adapter.notifyItemChanged(i)
-    }
-
-    override fun onMovieSelected(movie: MovieItem) {
-        val i = movies.indexOfFirst { it === movie }
-        if (i in movies.indices)
-            recyclerMovies.smoothScrollToPosition(i)
     }
 
     companion object {

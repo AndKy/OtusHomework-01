@@ -11,10 +11,10 @@ class MovieApplication : Application() {
 
     interface Listener {
         fun onMovieChanged(movie: MovieItem)
-        fun onMovieAdded(movie: MovieItem, pos: Int)
-        fun onMovieRemoved(movie: MovieItem, pos: Int)
-        fun onFavMovieAdded(movie: MovieItem, pos: Int)
-        fun onFavMovieRemoved(movie: MovieItem, pos: Int)
+        fun onMovieAdded(movie: MovieItem, i: Int)
+        fun onMovieRemoved(movie: MovieItem, i: Int)
+        fun onFavMovieAdded(movie: MovieItem, i: Int)
+        fun onFavMovieRemoved(movie: MovieItem, i: Int)
         fun onMovieSelected(movie: MovieItem)
     }
 

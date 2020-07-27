@@ -17,6 +17,8 @@ class SharedViewModel(application: Application)
 
     private val _app = application as MovieApplication
     private val _selectedMovie = MutableLiveData<MovieItem>()
+    private val _likedMovie = MutableLiveData<MovieItem>()
+    private val _detailsMovie = MutableLiveData<MovieItem>()
     private val _favAdapter : FavoritesAdapter
     private val _moviesAdapter : MoviesAdapter
 
@@ -40,10 +42,14 @@ class SharedViewModel(application: Application)
     val selectedMovie : LiveData<MovieItem>
         get() = _selectedMovie
 
+    val likedMovie : LiveData<MovieItem>
+        get() = _likedMovie
+
+    val detailsMovie : LiveData<MovieItem>
+        get() = _detailsMovie
+
     val favAdapter : LiveData<FavoritesAdapter>
     val moviesAdapter : LiveData<MoviesAdapter>
-
-
 
     init {
         _app.addListener(this)
@@ -68,10 +74,47 @@ class SharedViewModel(application: Application)
         _favAdapter.listener = object : FavoritesAdapter.Listener {
             override fun onFavMovieClick(movieItem: MovieItem) {
                 needScrollToMainPage = true
-                selectMovie(movieItem)
+                _app.setSelectedMovie(movieItem)
             }
         }
 
+        _moviesAdapter.listener = object : MoviesAdapter.Listener {
+            override fun onMovieClick(movieItem: MovieItem) {
+                _app.setSelectedMovie(movieItem)
+            }
+
+            override fun onMovieFavButtonClick(movieItem: MovieItem) {
+                _app.favMovieToggle(movieItem)
+                _app.setSelectedMovie(movieItem)
+
+                _likedMovie.value = movieItem
+            }
+
+            override fun onMovieDetailsButtonClick(movieItem: MovieItem) {
+                _detailsMovie.value = movieItem
+            }
+
+            override fun onAddMovieButtonClick() {
+                _app.addNewMovie()
+            }
+        }
+    }
+
+    fun onMoviesListScrolledToEnd() {
+        _app.uploadMovies()
+    }
+
+    fun onMovieSwipeToDelete(movie: MovieItem) {
+        _app.removeMovie(movie)
+    }
+
+    fun onCompleteActions() {
+        _likedMovie.value = null
+        _detailsMovie.value = null
+    }
+
+    fun onLikeCancel(movie: MovieItem) {
+        _moviesAdapter.listener?.onMovieFavButtonClick(movie)
     }
 
     override fun onCleared() {
@@ -79,21 +122,22 @@ class SharedViewModel(application: Application)
         super.onCleared()
     }
 
-    fun selectMovie(item: MovieItem) {
-        _app.setSelectedMovie(item)
-    }
-
     override fun onMovieChanged(movie: MovieItem) {
         favMovies.findItem(movie) { i ->
+            _favAdapter.notifyItemChanged(i)
+        }
+        movies.findItem(movie) { i ->
             _favAdapter.notifyItemChanged(i)
         }
     }
 
     override fun onMovieAdded(movie: MovieItem, i: Int) {
+        _moviesAdapter.notifyItemInserted(i)
     }
 
     override fun onMovieRemoved(movie: MovieItem, i: Int) {
-    }
+        _moviesAdapter.notifyItemRemoved(i)
+        _moviesAdapter.notifyItemRangeChanged(i, _moviesAdapter.itemCount - i)    }
 
     override fun onFavMovieAdded(movie: MovieItem, i: Int) {
         _favAdapter.notifyItemInserted(i)
