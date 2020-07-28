@@ -18,6 +18,7 @@ class SharedViewModel(application: Application)
     private val _selectedMovie = MutableLiveData<MovieItem>()
     private val _likedMovie = MutableLiveData<MovieItem>()
     private val _detailsMovie = MutableLiveData<MovieItem>()
+    private val _connectionError = MutableLiveData<Boolean>(false)
     private var _favAdapter : FavoritesAdapter? = null
     private var _moviesAdapter : MoviesAdapter? = null
 
@@ -39,6 +40,9 @@ class SharedViewModel(application: Application)
 
     val detailsMovie : LiveData<MovieItem>
         get() = _detailsMovie
+
+    val connectionError : LiveData<Boolean>
+        get() = _connectionError
 
     init {
         _app.addListener(this)
@@ -86,6 +90,11 @@ class SharedViewModel(application: Application)
 
     fun onMovieSwipeToDelete(movie: MovieItem) {
         _app.removeMovie(movie)
+    }
+
+    fun onConnectRetry() {
+        _connectionError.value = false
+        _app.uploadMovies()
     }
 
     fun onCompleteActions() {
@@ -136,5 +145,9 @@ class SharedViewModel(application: Application)
     override fun onMovieSelected(movie: MovieItem) {
         needScrollToSelectedMovie = true
         _selectedMovie.value = movie
+    }
+
+    override fun onConnectionError() {
+        _connectionError.value = true
     }
 }

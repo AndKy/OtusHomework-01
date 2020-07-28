@@ -16,6 +16,7 @@ class MovieApplication : Application() {
         fun onFavMovieAdded(movie: MovieItem, i: Int)
         fun onFavMovieRemoved(movie: MovieItem, i: Int)
         fun onMovieSelected(movie: MovieItem)
+        fun onConnectionError()
     }
 
     private val movies = ArrayList<MovieItem>()
@@ -47,9 +48,7 @@ class MovieApplication : Application() {
                     }
 
                     override fun onError() {
-                        Toast
-                            .makeText(applicationContext, getString(R.string.load_error), Toast.LENGTH_LONG)
-                            .show()
+                        listeners.forEach { it.onConnectionError() }
                         uploading = false
                     }
                 })

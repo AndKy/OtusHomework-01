@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -44,7 +45,6 @@ class MainActivity
 
         initClickListeners()
         initModel()
-
     }
 
     private fun initModel() {
@@ -69,6 +69,13 @@ class MainActivity
             if (it != null) {
                 openDetailsWindow(it)
                 model.onCompleteActions()
+            }
+        })
+
+        // Show connection error
+        model.connectionError.observe(this, Observer<Boolean> {
+            if (it) {
+                showConnectionError()
             }
         })
     }
@@ -119,6 +126,15 @@ class MainActivity
         } else {
             super.onBackPressed()
         }
+    }
+
+    private fun showConnectionError() {
+        val layout = findViewById<View>(android.R.id.content)
+        Snackbar.make(layout, getString(R.string.load_error), Snackbar.LENGTH_INDEFINITE)
+            .setAction(getString(R.string.retry)) {
+                model.onConnectRetry()
+            }
+            .show()
     }
 
     private fun showCancelSnackbar(movieItem: MovieItem) {
