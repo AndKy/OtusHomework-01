@@ -1,8 +1,6 @@
 package com.example.otushomework_01.ui.viewmodels
 
 import android.app.Application
-import android.content.Context
-import android.view.LayoutInflater
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
