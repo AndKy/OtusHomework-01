@@ -136,38 +136,13 @@ class MainActivity
     }
 
     private fun openDetailsWindow(movieItem: MovieItem) {
-
         val detailsFragment = DetailsFragment().apply {
             movie = movieItem
-            listener = object : DetailsFragment.Listener {
-                override fun onInviteButtonClicked(movie: MovieItem) {
-                    val inviteMsg = getString(R.string.invite_msg).format(movie.textTitle)
-                    val sendIntent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        type = "text/plain"
-                        putExtra(Intent.EXTRA_TEXT, inviteMsg)
-                    }
-
-                    sendIntent.resolveActivity(packageManager)?.let {
-                        startActivity(sendIntent)
-                    }
-                }
-
-                override fun onReturnCommentClicked(movie: MovieItem, result: Bundle) {
-                    result.let {
-                        val comment = it.getString(DetailsFragment.STATE_COMMENT)
-                        val like = it.getBoolean(DetailsFragment.STATE_LIKE, false)
-
-                        log("onReturnCommentClicked: comment='%s'".format(comment))
-                        log("onReturnCommentClicked: like='%b'".format(like))
-                    }
-                }
-            }
         }
 
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.frame_container, detailsFragment, DetailsFragment.TAG)
+            .replace(R.id.frame_container, detailsFragment, "DetailsFragment")
             .addToBackStack(null)
             .commit()
     }
