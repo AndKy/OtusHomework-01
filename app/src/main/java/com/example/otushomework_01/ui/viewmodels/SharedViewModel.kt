@@ -44,7 +44,7 @@ class SharedViewModel(application: Application)
 
     init {
         _app.addListener(this)
-   }
+    }
 
     fun onFavMoviesAdapterCreated(favAdapter : FavoritesAdapter) {
         _favAdapter = favAdapter
