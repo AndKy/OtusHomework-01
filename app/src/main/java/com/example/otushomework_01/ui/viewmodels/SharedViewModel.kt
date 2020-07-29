@@ -79,13 +79,19 @@ class SharedViewModel(application: Application)
             }
 
             override fun onAddMovieButtonClick() {
-                _app.addNewMovie()
+                uploadMovies()
             }
         }
     }
 
-    fun onMoviesListScrolledToEnd() {
+    private fun uploadMovies() {
+        _connectionError.value = false
         _app.uploadMovies()
+    }
+
+
+    fun onMoviesListScrolledToEnd() {
+        uploadMovies()
     }
 
     fun onMovieSwipeToDelete(movie: MovieItem) {
@@ -93,8 +99,7 @@ class SharedViewModel(application: Application)
     }
 
     fun onConnectRetry() {
-        _connectionError.value = false
-        _app.uploadMovies()
+        uploadMovies()
     }
 
     fun onCompleteActions() {

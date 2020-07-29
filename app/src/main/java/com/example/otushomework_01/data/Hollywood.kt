@@ -1,92 +1,11 @@
 package com.example.otushomework_01.data
 
-import com.example.otushomework_01.R
 import com.example.otushomework_01.tmdtb.Movie
 import kotlin.random.Random
 
 // Hollywood - random movie generator
 object Hollywood {
 
-    private val logos = arrayOf(
-        R.drawable.movie_logo_1,
-        R.drawable.movie_logo_2,
-        R.drawable.movie_logo_3,
-        R.drawable.movie_logo_4,
-        R.drawable.movie_logo_5,
-        R.drawable.movie_logo_6,
-        R.drawable.movie_logo_7,
-        R.drawable.movie_logo_8,
-        R.drawable.movie_logo_9,
-        R.drawable.movie_logo_10,
-        R.drawable.movie_logo_11,
-        R.drawable.movie_logo_12,
-        R.drawable.movie_logo_13,
-        R.drawable.movie_logo_14,
-        R.drawable.movie_logo_15,
-        R.drawable.movie_logo_16,
-        R.drawable.movie_logo_17,
-        R.drawable.movie_logo_18,
-        R.drawable.movie_logo_19,
-        R.drawable.movie_logo_20,
-        R.drawable.movie_logo_21,
-        R.drawable.movie_logo_22,
-        R.drawable.movie_logo_23,
-        R.drawable.movie_logo_24,
-        R.drawable.movie_logo_25,
-        R.drawable.movie_logo_26,
-        R.drawable.movie_logo_27,
-        R.drawable.movie_logo_28,
-        R.drawable.movie_logo_29,
-        R.drawable.movie_logo_30,
-        R.drawable.movie_logo_31,
-        R.drawable.movie_logo_32,
-        R.drawable.movie_logo_33,
-        R.drawable.movie_logo_34,
-        R.drawable.movie_logo_35,
-        R.drawable.movie_logo_36,
-        R.drawable.movie_logo_37,
-        R.drawable.movie_logo_38
-    )
-    private val titles = arrayOf(
-        "Побег из Шоушенка",
-        "Зеленая миля",
-        "Форрест Гамп",
-        "Список Шиндлера",
-        "1 + 1",
-        "Начало",
-        "Леон",
-        "Король Лев",
-        "Бойцовский клуб",
-        "Иван Васильевич меняет профессию",
-        "Жизнь прекрасна",
-        "Достучаться до небес",
-        "Крестный отец",
-        "Криминальное чтиво",
-        "Операция «Ы» и другие приключения Шурика",
-        "Престиж",
-        "Игры разума",
-        "Интерстеллар",
-        "Властелин колец:\nВозвращение Короля",
-        "Гладиатор",
-        "Назад в будущее",
-        "Карты, деньги, два ствола",
-        "Матрица",
-        "Отступники",
-        "Поймай меня, если сможешь",
-        "Пианист",
-        "Властелин колец:\nБратство кольца",
-        "Тайна Коко",
-        "Большой куш",
-        "Властелин колец:\nДве крепости",
-        "Американская история X",
-        "Пираты Карибского моря:\nПроклятие черной жемчужины",
-        "Остров проклятых",
-        "Темный рыцарь",
-        "Пролетая над гнездом кукушки",
-        "Титаник",
-        "Запах женщины",
-        "Хатико:\nСамый верный друг"
-    )
     private val actors = arrayOf(
         "Тим Роббинс",
         "Боб Гантон",
@@ -480,40 +399,7 @@ object Hollywood {
         "фэнтези",
         "эротика"
     )
-    private val suffix = arrayOf(
-        "Новая надежда",
-        "Судный день",
-        "Восстание машин",
-        "Сундук мертвеца",
-        "Нежданное путешествие",
-        "На краю Света",
-        "Через вселенные",
-        "Атака клонов",
-        "Воскрешение",
-        "Скрытая угроза",
-        "Война бесконечности",
-        "Путь самурая",
-        "Возмездие",
-        "Возрождение легенды",
-        "Возращение короля",
-        "Финал",
-        "Войны клонов",
-        "Дорога домой",
-        "Миссия Клеопатра",
-        "Падаванская угроза",
-        "В поисках мира",
-        "Первый контакт",
-        "Затерянный мир",
-        "Империя наносит ответный удар",
-        "Новые времена",
-        "Принц тьмы",
-        "Восстание",
-        "Танец с Дьяволом",
-        "Час расплаты",
-        "Горькая правда",
-        "Пророк",
-        "Копье судьбы"
-        )
+
     private val producer = arrayOf(
         "Акира Куросава",
         "Александр Петрович Довженко",
@@ -616,18 +502,6 @@ object Hollywood {
         "Ясудзиро Одзу"
     )
 
-    fun makeMovie() : MovieItem {
-        val i = logos.indices.random()
-        val details = randDetails()
-        return MovieItem(
-            logos[i].toString(),
-            logos[i].toString(),
-            randTitle(i),
-            details,
-            details
-        )
-    }
-
     fun convertMovieToItem(movie: Movie) : MovieItem {
         return MovieItem(
             "https://image.tmdb.org/t/p/w342${movie.posterPath}",
@@ -636,29 +510,6 @@ object Hollywood {
             randDetails(),
             movie.overview
         )
-    }
-
-    fun makeNewMovie(movies: List<MovieItem>) : MovieItem {
-        var movie = makeMovie()
-
-        // try to generate unique movie fixed number of times
-        repeat (10) {
-            val isUnique = movies.find { it.textTitle == movie.textTitle } == null
-            if (isUnique)
-                return movie
-            movie = makeMovie()
-        }
-
-        return movie
-    }
-
-    private fun randTitle(i: Int) : String {
-        val title = titles[i]
-
-        return if (title.contains(":") || Random.nextInt(10) == 0)
-            title
-        else
-            "%s:\n%s".format(title, suffix.random())
     }
 
     private fun randDetails() : String {

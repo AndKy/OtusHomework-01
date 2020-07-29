@@ -84,12 +84,6 @@ class MovieApplication : Application() {
         }
     }
 
-    fun addNewMovie() {
-        val movie =
-            Hollywood.makeNewMovie(movies)
-        addMovie(movie)
-    }
-
     fun removeMovie(movie: MovieItem) {
         var pos = movies.indexOfFirst { it === movie }
         if (pos in movies.indices) {
