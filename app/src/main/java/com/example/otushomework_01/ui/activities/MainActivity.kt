@@ -5,23 +5,19 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.Observer
 import com.example.otushomework_01.R
-import com.example.otushomework_01.data.Application
-import com.example.otushomework_01.data.MovieApplication
 import com.example.otushomework_01.data.MovieItem
-import com.example.otushomework_01.data.Utils
 import com.example.otushomework_01.ui.fragments.DetailsFragment
-import com.example.otushomework_01.ui.fragments.FavoritesFragment
-import com.example.otushomework_01.ui.fragments.MovieListFragment
 import com.example.otushomework_01.ui.fragments.PagerFragment
+import com.example.otushomework_01.ui.viewmodels.SharedViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_pager.*
@@ -30,6 +26,8 @@ class MainActivity
     : AppCompatActivity() {
 
     private var pagerFragment: PagerFragment? = null
+    private val model: SharedViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +44,40 @@ class MainActivity
             nav_view.setCheckedItem(R.id.nav_movies)
 
         initClickListeners()
+        initModel()
+    }
+
+    private fun initModel() {
+        // Scroll to main movie list on select movie
+        model.selectedMovie.observe(this, Observer<MovieItem> {
+            if (model.needScrollToMainPage) {
+                model.needScrollToMainPage = false
+                pagerFragment?.scrollToPage(PagerFragment.Pages.MOVIES)
+            }
+        })
+
+        // Show snack bar when press like on movie
+        model.likedMovie.observe(this, Observer<MovieItem> {
+            if (it != null) {
+                showCancelSnackbar(it)
+                model.onCompleteActions()
+            }
+        })
+
+        // Open detail activity when details button clicked
+        model.detailsMovie.observe(this, Observer<MovieItem> {
+            if (it != null) {
+                openDetailsWindow(it)
+                model.onCompleteActions()
+            }
+        })
+
+        // Show connection error
+        model.connectionError.observe(this, Observer<Boolean> {
+            if (it) {
+                showConnectionError()
+            }
+        })
     }
 
     override fun onAttachFragment(fragment: Fragment) {
@@ -53,13 +85,7 @@ class MainActivity
 
         log("OnAttachFragment: $fragment")
 
-        if (fragment is MovieListFragment) {
-            attachFragment(fragment)
-        }
-        else if (fragment is FavoritesFragment) {
-            attachFragment(fragment)
-        }
-        else if (fragment is PagerFragment) {
+        if (fragment is PagerFragment) {
             attachFragment(fragment)
         }
     }
@@ -72,89 +98,6 @@ class MainActivity
                 nav_view.setCheckedItem(pageToMenuItemId(page))
             }
         }
-    }
-
-    private fun attachFragment(fragment: MovieListFragment) {
-        val listener = Utils.makeListenerFor(fragment)
-
-        // set movies list
-        fragment.movies = Application.getMovies()
-
-        // subscribe
-        fragment.listener = object :
-            MovieListFragment.Listener {
-            override fun onMovieSwipeDelete(movieItem: MovieItem) {
-                Application.removeMovie(movieItem)
-            }
-
-            override fun onPagination() {
-                Application.uploadMovies()
-            }
-
-            override fun onMovieClick(movieItem: MovieItem) {
-                Application.setSelectedMovie(movieItem)
-            }
-
-            override fun onMovieFavButtonClick(movieItem: MovieItem) {
-                Application.favMovieToggle(movieItem)
-                Application.setSelectedMovie(movieItem)
-
-                val msg =
-                    if (movieItem.isFavorite)
-                        getString(R.string.movie_added_to_favorite).format(movieItem.textTitle.replace("\n", " "))
-                    else
-                        getString(R.string.movie_removed_from_favorites).format(movieItem.textTitle.replace("\n", " "))
-
-                Snackbar.make(viewpager, msg, Snackbar.LENGTH_LONG)
-                    .setAction(getString(R.string.cancel)) {
-                        onMovieFavButtonClick(movieItem)
-                    }
-                    .show()
-            }
-
-            override fun onMovieDetailsButtonClick(movieItem: MovieItem) {
-                openDetailsWindow(movieItem)
-            }
-
-            override fun onAddMovieButtonClick() {
-                Application.addNewMovie()
-            }
-        }
-
-        // attach fragment to data model
-        addFragmentListener(fragment, listener)
-    }
-
-    private fun addFragmentListener(fragment: Fragment, listener: MovieApplication.Listener) {
-        // attach fragment listener to data model
-        Application.addListener(listener)
-
-        // detach fragment listener from data model on destroy
-        fragment.lifecycle.addObserver(object : LifecycleObserver {
-            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-                fun onDestroy() {
-                    Application.removeListener(listener)
-                }
-        })
-    }
-
-    private fun attachFragment(fragment: FavoritesFragment) {
-        val listener = Utils.makeListenerFor(fragment)
-
-        // set movies list
-        fragment.movies = Application.getFavMovies()
-
-        // subscribe
-        fragment.listener = object :
-            FavoritesFragment.Listener {
-            override fun onFavMovieClick(movieItem: MovieItem) {
-                Application.setSelectedMovie(movieItem)
-                pagerFragment?.scrollToPage(PagerFragment.Pages.MOVIES)
-            }
-        }
-
-        // attach fragment to data model
-        addFragmentListener(fragment, listener)
     }
 
     override fun onBackPressed() {
@@ -185,39 +128,37 @@ class MainActivity
         }
     }
 
-    private fun openDetailsWindow(movieItem: MovieItem) {
+    private fun showConnectionError() {
+        val layout = findViewById<View>(android.R.id.content)
+        Snackbar.make(layout, getString(R.string.load_error), Snackbar.LENGTH_INDEFINITE)
+            .setAction(getString(R.string.retry)) {
+                model.onConnectRetry()
+            }
+            .show()
+    }
 
+    private fun showCancelSnackbar(movieItem: MovieItem) {
+        val msg =
+            if (movieItem.isFavorite)
+                getString(R.string.movie_added_to_favorite).format(movieItem.textTitle.replace("\n", " "))
+            else
+                getString(R.string.movie_removed_from_favorites).format(movieItem.textTitle.replace("\n", " "))
+
+        Snackbar.make(viewpager, msg, Snackbar.LENGTH_LONG)
+            .setAction(getString(R.string.cancel)) {
+                model.onLikeCancel(movieItem)
+            }
+            .show()
+    }
+
+    private fun openDetailsWindow(movieItem: MovieItem) {
         val detailsFragment = DetailsFragment().apply {
             movie = movieItem
-            listener = object : DetailsFragment.Listener {
-                override fun onInviteButtonClicked(movie: MovieItem) {
-                    val inviteMsg = getString(R.string.invite_msg).format(movie.textTitle)
-                    val sendIntent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        type = "text/plain"
-                        putExtra(Intent.EXTRA_TEXT, inviteMsg)
-                    }
-
-                    sendIntent.resolveActivity(packageManager)?.let {
-                        startActivity(sendIntent)
-                    }
-                }
-
-                override fun onReturnCommentClicked(movie: MovieItem, result: Bundle) {
-                    result.let {
-                        val comment = it.getString(DetailsFragment.STATE_COMMENT)
-                        val like = it.getBoolean(DetailsFragment.STATE_LIKE, false)
-
-                        log("onReturnCommentClicked: comment='%s'".format(comment))
-                        log("onReturnCommentClicked: like='%b'".format(like))
-                    }
-                }
-            }
         }
 
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.frame_container, detailsFragment, DetailsFragment.TAG)
+            .replace(R.id.frame_container, detailsFragment, "DetailsFragment")
             .addToBackStack(null)
             .commit()
     }

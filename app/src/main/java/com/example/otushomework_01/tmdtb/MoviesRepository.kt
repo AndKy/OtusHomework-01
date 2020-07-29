@@ -9,6 +9,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.time.Duration
 
 object MoviesRepository {
 
@@ -23,6 +24,7 @@ object MoviesRepository {
         val gson = GsonBuilder()
             .setPrettyPrinting()
             .create()
+
 
         val client = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor()

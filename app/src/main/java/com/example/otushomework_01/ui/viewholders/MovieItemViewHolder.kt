@@ -3,8 +3,6 @@ package com.example.otushomework_01.ui.viewholders
 import android.content.res.Configuration
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.example.otushomework_01.R
 import com.example.otushomework_01.data.MovieItem
 import com.example.otushomework_01.data.assign

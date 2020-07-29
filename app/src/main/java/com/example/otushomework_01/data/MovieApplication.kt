@@ -11,11 +11,12 @@ class MovieApplication : Application() {
 
     interface Listener {
         fun onMovieChanged(movie: MovieItem)
-        fun onMovieAdded(movie: MovieItem, pos: Int)
-        fun onMovieRemoved(movie: MovieItem, pos: Int)
-        fun onFavMovieAdded(movie: MovieItem, pos: Int)
-        fun onFavMovieRemoved(movie: MovieItem, pos: Int)
+        fun onMovieAdded(movie: MovieItem, i: Int)
+        fun onMovieRemoved(movie: MovieItem, i: Int)
+        fun onFavMovieAdded(movie: MovieItem, i: Int)
+        fun onFavMovieRemoved(movie: MovieItem, i: Int)
         fun onMovieSelected(movie: MovieItem)
+        fun onConnectionError()
     }
 
     private val movies = ArrayList<MovieItem>()
@@ -47,9 +48,7 @@ class MovieApplication : Application() {
                     }
 
                     override fun onError() {
-                        Toast
-                            .makeText(applicationContext, getString(R.string.load_error), Toast.LENGTH_LONG)
-                            .show()
+                        listeners.forEach { it.onConnectionError() }
                         uploading = false
                     }
                 })
